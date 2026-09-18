@@ -66,4 +66,35 @@
 
     <string name="status_nothing_heard_peak">Non ho sentito niente (picco %1$d)</string>
     <string name="talk_listening_hint">Parla — si ferma da solo quando finisci</string>
+
+    <string name="settings_title">Impostazioni</string>
+    <string name="settings_cost_notice">Questi servizi si pagano a consumo. Ogni domanda costa una trascrizione, una risposta e, se viene letta ad alta voce, anche la sintesi. A fatturare sono OpenAI o xAI sul tuo account, non quest\'app. Tieni d\'occhio la spesa e usa una chiave con un tetto.</string>
+    <string name="settings_openai_key">Chiave OpenAI — serve per sentire e parlare, e per le risposte se scegli OpenAI</string>
+    <string name="settings_openai_hint">sk-...</string>
+    <string name="settings_xai_key">Chiave xAI — solo per le risposte, facoltativa</string>
+    <string name="settings_xai_hint">xai-...</string>
+    <string name="settings_provider">Risponde: %1$s</string>
+    <string name="settings_model">Modello: %1$s</string>
+    <string name="settings_model_auto">automatico</string>
+    <string name="settings_model_pick">Quale modello risponde</string>
+    <string name="settings_voice_pick">Quale voce parla</string>
+    <string name="settings_speech_notice">Sentire e parlare passano sempre da OpenAI: xAI non pubblica servizi di trascrizione o sintesi.</string>
+    <string name="settings_speech_missing">Senza una chiave OpenAI l\'assistente non può sentirti, qualunque servizio risponda.</string>
+    <string name="settings_no_xai_key">Nessuna chiave xAI inserita</string>
+    <string name="settings_no_openai_key">Nessuna chiave OpenAI inserita</string>
+    <string name="settings_no_key_at_all">Inserisci prima una chiave</string>
+    <string name="action_settings">Impostazioni</string>
+
+    <string name="status_floor">Ambiente: %1$d, parlato sopra %2$d</string>
+    <string name="section_mediakey">Volante come tasto media</string>
+
+    <string name="settings_wheel">Il tasto al volante apre l\'app: %1$s</string>
+    <string name="settings_wheel_explain">Solo la pressione lunga, e solo se quest\'auto manda il tasto voce come tasto media — la Diagnostica te lo dice. Tienilo spento finché non lo sai: una pressione breve di play o pausa appartiene a chi sta suonando musica.</string>
+    <string name="on">acceso</string>
+    <string name="off">spento</string>
+
+    <string name="settings_section_cost">Quanto costa</string>
+    <string name="settings_section_keys">Chiavi</string>
+    <string name="settings_section_conversation">Conversazione</string>
+    <string name="settings_section_wheel">Volante</string>
 </resources>

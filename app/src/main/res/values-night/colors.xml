@@ -14,23 +14,27 @@
     <color name="text_primary">#f2f5f7</color>
     <color name="text_secondary">#99ffffff</color>
 
-    <!-- The same blue as daytime. A lighter one reads better on a dark ground, and the
-         launcher still keeps this one at night: looking like the app next to it matters more
-         here than winning a contrast comparison against it. -->
-    <color name="accent">#056eff</color>
-    <color name="accent_pressed">#0455cc</color>
+    <!-- Not the daytime blue. #056eff is SAIC's own, and on this charcoal it falls to about
+         3:1 where text wants 4.5 — it reads muddy rather than bright. The launcher lifts it at
+         night for exactly that reason, and the constructor does the same in its own dark theme
+         (vehiclesettings keeps charging_mode_color at #4b8fff by day and #b2cfff at night).
+         These are the launcher's night values, taken so the two apps agree. -->
+    <color name="accent">#7fb0ff</color>
+    <color name="accent_pressed">#5d95e6</color>
 
-    <!-- The launcher's night card face. Lighter than the ground, as its cards are — not the
-         darker tint its drawer buttons use, which at night all but disappears against the
-         background it sits on. -->
-    <color name="button_surface">#4e5154</color>
-    <!-- Its own pressed artwork is within a point or two of the resting state, which is a
-         quirk not worth reproducing: a button that gives no feedback on a screen this far
-         away is a button you press twice. -->
-    <color name="button_surface_pressed">#5c5f63</color>
+    <!-- The tonal buttons invert at night: a wash of white instead of one of black, which
+         over a charcoal ground is the difference between a visible surface and none. These
+         are the launcher's own night values rather than a colour sampled from its card
+         artwork, which is what this used to hold. -->
+    <color name="button_surface">#26ffffff</color>
+    <color name="button_surface_pressed">#4dffffff</color>
+    <!-- An outline does the work at the edges that the wash alone cannot on a dark ground. -->
+    <color name="button_border">#33ffffff</color>
 
     <color name="chrome_background">#2d2e2e</color>
     <color name="page_background">#2d2e2e</color>
 
     <color name="hairline">#1fffffff</color>
+    <!-- Placeholder text at night, from the launcher's own values-night palette. -->
+    <color name="text_tertiary">#52ffffff</color>
 </resources>

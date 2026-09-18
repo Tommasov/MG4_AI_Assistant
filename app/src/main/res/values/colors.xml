@@ -10,6 +10,8 @@
     <!-- Tonal surfaces: tints of text_primary, as in the launcher's native-style buttons. -->
     <color name="button_surface">#1f3c4143</color>
     <color name="button_surface_pressed">#3d3c4143</color>
+    <!-- No outline in daylight: the wash alone reads well on the light ground. -->
+    <color name="button_border">#00000000</color>
 
     <!-- The toolbar, and the plate behind the favourites grid. Not pure white: the launcher's
          daytime home artwork (drawable/bg_home.png) measures #f4f4f4, and side by side the
@@ -20,4 +22,7 @@
     <!-- The line under the toolbar: present enough to separate it from the page, faint
          enough that it never competes with the page's own content. -->
     <color name="hairline">#14000000</color>
+    <!-- Placeholder text: dimmer than secondary. Same tint the SAIC tab bar uses for
+         unselected tabs, carried through the launcher and MG4 360 Camera. -->
+    <color name="text_tertiary">#503c4143</color>
 </resources>

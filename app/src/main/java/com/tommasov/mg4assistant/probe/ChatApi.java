@@ -154,22 +154,36 @@ public final class ChatApi {
      * to one of those returns a 404 that reads exactly like a wrong endpoint. So the pick is
      * made from what the account really has, filtered to the families that take messages.
      */
+    @NonNull
+    public static List<String> chatModelsFrom(@NonNull List<String> ids) {
+        List<String> out = new ArrayList<>();
+        for (String id : ids) {
+            if (isChatModel(id)) {
+                out.add(id);
+            }
+        }
+        return out;
+    }
+
+    private static boolean isChatModel(@NonNull String id) {
+        String lower = id.toLowerCase(Locale.US);
+        boolean family = lower.startsWith("gpt-") || lower.startsWith("grok")
+                || lower.startsWith("o1") || lower.startsWith("o3") || lower.startsWith("o4");
+        if (!family) {
+            return false;
+        }
+        return !(lower.contains("audio") || lower.contains("realtime")
+                || lower.contains("image") || lower.contains("transcribe")
+                || lower.contains("tts") || lower.contains("search")
+                || lower.contains("embedding") || lower.contains("moderation"));
+    }
+
     @Nullable
     public static String chatModelFrom(@NonNull List<String> ids) {
         for (String id : ids) {
-            String lower = id.toLowerCase(Locale.US);
-            boolean family = lower.startsWith("gpt-") || lower.startsWith("grok")
-                    || lower.startsWith("o1") || lower.startsWith("o3") || lower.startsWith("o4");
-            if (!family) {
-                continue;
+            if (isChatModel(id)) {
+                return id;
             }
-            if (lower.contains("audio") || lower.contains("realtime")
-                    || lower.contains("image") || lower.contains("transcribe")
-                    || lower.contains("tts") || lower.contains("search")
-                    || lower.contains("embedding") || lower.contains("moderation")) {
-                continue;
-            }
-            return id;
         }
         return null;
     }

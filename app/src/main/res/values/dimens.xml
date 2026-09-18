@@ -25,4 +25,12 @@
     <dimen name="status_text_size">22sp</dimen>
     <!-- The answer is the thing being read; everything else on screen is scaffolding. -->
     <dimen name="reply_text_size">30sp</dimen>
+
+    <!-- The settings vocabulary, matching MG4 360 Camera: headings, labels, hairlines. -->
+    <dimen name="section_header_size">22sp</dimen>
+    <dimen name="secondary_text_size">20sp</dimen>
+    <dimen name="section_gap">28dp</dimen>
+    <dimen name="row_gap">16dp</dimen>
+    <dimen name="field_margin_top">8dp</dimen>
+    <dimen name="hairline_height">1dp</dimen>
 </resources>

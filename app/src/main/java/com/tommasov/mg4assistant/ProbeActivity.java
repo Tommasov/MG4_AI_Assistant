@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat;
 import com.tommasov.mg4assistant.probe.AudioProbe;
 import com.tommasov.mg4assistant.probe.ChatApi;
 import com.tommasov.mg4assistant.probe.HardKeyWatch;
+import com.tommasov.mg4assistant.probe.MediaKeyWatch;
 import com.tommasov.mg4assistant.probe.ProbeReport;
 import com.tommasov.mg4assistant.probe.SpeechProbe;
 import com.tommasov.mg4assistant.probe.TtsProbe;
@@ -63,6 +64,7 @@ public class ProbeActivity extends AppCompatActivity {
     private Button sendButton;
 
     private final HardKeyWatch hardKeys = new HardKeyWatch();
+    private final MediaKeyWatch mediaKeys = new MediaKeyWatch();
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     // One string per section, so re-running one test leaves the others' findings alone.
@@ -74,6 +76,7 @@ public class ProbeActivity extends AppCompatActivity {
     private String carTtsSection = "";
     private String apiSection = "";
     private String hardKeySection = "";
+    private String mediaKeySection = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -117,13 +120,19 @@ public class ProbeActivity extends AppCompatActivity {
             hardKeySection = hardKeys.describe();
             render();
         });
+        mediaKeys.start(this, () -> {
+            mediaKeySection = mediaKeys.describe();
+            render();
+        });
         hardKeySection = hardKeys.describe();
+        mediaKeySection = mediaKeys.describe();
         render();
     }
 
     @Override
     protected void onStop() {
         hardKeys.stop();
+        mediaKeys.stop();
         super.onStop();
     }
 
@@ -375,6 +384,7 @@ public class ProbeActivity extends AppCompatActivity {
         section(sb, getString(R.string.section_mic), micSection);
         section(sb, getString(R.string.section_car_tts), carTtsSection);
         section(sb, getString(R.string.section_hardkey), hardKeySection);
+        section(sb, getString(R.string.section_mediakey), mediaKeySection);
         section(sb, getString(R.string.section_api), apiSection);
         report.setText(sb.toString());
     }

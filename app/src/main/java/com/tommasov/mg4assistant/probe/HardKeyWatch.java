@@ -53,6 +53,27 @@ public final class HardKeyWatch {
         void onEvent();
     }
 
+    /** One press, for a caller that wants to act on it rather than print it. */
+    public static final class Event {
+        public final int keycode;
+        public final boolean down;
+        public final boolean longPress;
+
+        Event(int keycode, boolean down, boolean longPress) {
+            this.keycode = keycode;
+            this.down = down;
+            this.longPress = longPress;
+        }
+    }
+
+    @Nullable private Event last;
+
+    /** The most recent press, or null if none has arrived. */
+    @Nullable
+    public Event last() {
+        return last;
+    }
+
     private final List<String> events = new ArrayList<>();
     private final SimpleDateFormat clock = new SimpleDateFormat("HH:mm:ss", Locale.US);
 
@@ -74,6 +95,7 @@ public final class HardKeyWatch {
                 int keycode = intent.getIntExtra(EXTRA_KEYCODE, -1);
                 boolean down = intent.getBooleanExtra(EXTRA_DOWN, false);
                 boolean longPress = intent.getBooleanExtra(EXTRA_LONGPRESS, false);
+                last = new Event(keycode, down, longPress);
                 add(clock.format(new Date()) + "  keycode " + keycode
                         + (keycode == KEYCODE_VOICE_WHEEL ? " (wheel voice)" : "")
                         + ", down " + down + ", long " + longPress);

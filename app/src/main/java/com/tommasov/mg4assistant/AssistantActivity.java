@@ -20,6 +20,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.tommasov.mg4assistant.probe.ChatApi;
+import com.tommasov.mg4assistant.probe.HardKeyWatch;
 import com.tommasov.mg4assistant.ui.AmbientGlowView;
 import com.tommasov.mg4assistant.voice.AudioFocus;
 import com.tommasov.mg4assistant.voice.CarVoice;
@@ -68,6 +69,13 @@ public class AssistantActivity extends AppCompatActivity {
 
     private final VoiceRecorder recorder = new VoiceRecorder();
     private final AudioFocus audioFocus = new AudioFocus();
+    private Settings settings;
+    /**
+     * The steering wheel, if this car lets an ordinary app hear it. Whether the broadcast
+     * arrives at all is the open question; until it is answered this listens for nothing and
+     * costs nothing.
+     */
+    private final HardKeyWatch wheel = new HardKeyWatch();
     private final RemoteVoice remoteVoice = new RemoteVoice();
     private final CarVoice carVoice = new CarVoice();
     private final Handler main = new Handler(Looper.getMainLooper());
@@ -85,6 +93,7 @@ public class AssistantActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assistant);
+        settings = new Settings(this);
 
         talkButton = findViewById(R.id.button_talk);
         level = findViewById(R.id.level);
@@ -113,8 +122,8 @@ public class AssistantActivity extends AppCompatActivity {
         }
         remoteVoice.setVoice(getSharedPreferences(PREFS, Context.MODE_PRIVATE)
                 .getString(KEY_VOICE_NAME, RemoteVoice.VOICES[0]));
-        findViewById(R.id.button_diagnostics).setOnClickListener(
-                v -> startActivity(new Intent(this, ProbeActivity.class)));
+        findViewById(R.id.button_settings).setOnClickListener(
+                v -> startActivity(new Intent(this, SettingsActivity.class)));
 
         if (apiKey().isEmpty()) {
             talkButton.setEnabled(false);
@@ -165,6 +174,14 @@ public class AssistantActivity extends AppCompatActivity {
             @Override
             public void onLevel(int percent) {
                 level.setProgress(percent);
+            }
+
+            @Override
+            public void onFloor(int noiseFloor, int speechLevel) {
+                // Shown while listening because it is the number that explains a recording
+                // that will not stop, or one that never hears a word: the cabin was louder
+                // or quieter than the thresholds assumed.
+                status.setText(getString(R.string.status_floor, noiseFloor, speechLevel));
             }
 
             @Override
@@ -251,7 +268,9 @@ public class AssistantActivity extends AppCompatActivity {
     private void answer(@NonNull String question) {
         status.setText(R.string.status_thinking);
         Conversation.shared().addUser(question);
-        final String key = apiKey();
+        // The conversation may run on a different service from the voice: xAI can answer
+        // while OpenAI listens and speaks.
+        final String key = settings.chatKey();
         new Thread(() -> {
             String model = chatModel(key);
             if (model == null) {
@@ -292,10 +311,9 @@ public class AssistantActivity extends AppCompatActivity {
      */
     @Nullable
     private String chatModel(@NonNull String key) {
-        SharedPreferences prefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
-        String cached = prefs.getString(KEY_MODEL, "");
-        if (!cached.isEmpty()) {
-            return cached;
+        String chosen = settings.chatModel();
+        if (!chosen.isEmpty()) {
+            return chosen;
         }
         ChatApi.Result models = ChatApi.listModels(key);
         if (!models.ok) {
@@ -304,7 +322,7 @@ public class AssistantActivity extends AppCompatActivity {
         List<String> ids = ChatApi.modelsFrom(models);
         String picked = ChatApi.chatModelFrom(ids);
         if (picked != null) {
-            prefs.edit().putString(KEY_MODEL, picked).apply();
+            settings.setChatModel(picked);
         }
         return picked;
     }
@@ -462,15 +480,29 @@ public class AssistantActivity extends AppCompatActivity {
         talkButton.setText(value ? R.string.talk_busy : R.string.talk_idle);
     }
 
+    /** The key for hearing and speaking. Always OpenAI's; xAI has neither. */
     @NonNull
     private String apiKey() {
-        // The same key the probe uses: compiled in while this build is private, and the one
-        // thing that keeps it out of the download catalogue.
-        return ChatApi.builtInKey();
+        return settings.speechKey();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // A long press on the wheel closes the assistant: the way out that does not need the
+        // screen, on a screen the whole app exists to avoid.
+        wheel.start(this, () -> {
+            HardKeyWatch.Event last = wheel.last();
+            if (last != null && last.keycode == HardKeyWatch.KEYCODE_VOICE_WHEEL
+                    && last.longPress && last.down) {
+                finish();
+            }
+        });
     }
 
     @Override
     protected void onStop() {
+        wheel.stop();
         // Leaving the screen with the microphone live would be the one way this app listens
         // when nobody asked it to.
         recorder.cancel();

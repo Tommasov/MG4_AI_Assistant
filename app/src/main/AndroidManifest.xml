@@ -52,12 +52,30 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustResize" />
+
         <!-- The measuring instrument, kept but no longer launched directly: what it reports
              stays useful every time the firmware or the car changes under us. -->
         <activity
             android:name=".ProbeActivity"
             android:exported="false"
             android:screenOrientation="landscape" />
+        <!-- Declared, not registered in code: a receiver made by a running activity can
+             never be the thing that opens the app. MEDIA_BUTTON is one of the few broadcasts
+             that still start a stopped app on Android 8 and later — the car's own key
+             broadcast is implicit, and those are not delivered to manifest receivers at all.
+             Does nothing unless the setting is on. -->
+        <receiver
+            android:name=".WheelButtonReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

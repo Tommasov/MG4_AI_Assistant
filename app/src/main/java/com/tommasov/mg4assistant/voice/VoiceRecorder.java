@@ -55,8 +55,25 @@ public final class VoiceRecorder {
      * a quiet voice — but they are the one part of this that has never been tried against a
      * running engine, so the peak is reported back to the screen for retuning.
      */
-    private static final int SPEECH_LEVEL = 1500;
-    private static final int SILENCE_LEVEL = 800;
+    /*
+     * The floor is measured, not assumed. This is an electric car, so there is no engine to
+     * set a steady noise level: the cabin is either near-silent, or it has the fan at eleven,
+     * or it has a window open at speed. Those are three different worlds, and a fixed
+     * threshold is wrong in at least one of them — worst of all in the noisy ones, where a
+     * silence threshold below the fan means the pause that ends a sentence never arrives and
+     * every recording runs to the thirty second ceiling.
+     *
+     * So the first fraction of a second is spent listening to the room, and the thresholds
+     * are set from what it finds. The multipliers are what separate a voice from its
+     * background; the minimums stop a silent cabin from making them absurdly sensitive, and
+     * the cap stops a speaker who starts instantly from being measured as noise.
+     */
+    private static final long FLOOR_WINDOW_MS = 800;
+    private static final int FLOOR_CAP = 1500;
+    private static final int MIN_SPEECH_LEVEL = 1200;
+    private static final int MIN_SILENCE_LEVEL = 600;
+    private static final float SPEECH_OVER_FLOOR = 3.0f;
+    private static final float SILENCE_OVER_FLOOR = 1.6f;
     /** A pause this long after speech ends the recording. Shorter clips people mid-thought. */
     private static final long END_SILENCE_MS = 1200;
     /** If nobody has said anything by now, stop rather than upload a lungful of nothing. */
@@ -80,6 +97,13 @@ public final class VoiceRecorder {
         /** 0 to 100, for something on screen that shows it is listening. */
         void onLevel(int percent);
 
+        /**
+         * The room has been measured and the thresholds set from it. Reported because these
+         * are the numbers to look at when the recorder mishears a cabin — a fan at full, a
+         * window open — rather than a person.
+         */
+        void onFloor(int noiseFloor, int speechLevel);
+
         /** The recording ended: by hand, because speech stopped, or because of the cap. */
         void onStopped(@NonNull File audio, int millis, @NonNull Stop reason, int peak);
 
@@ -97,6 +121,10 @@ public final class VoiceRecorder {
     private boolean heardSpeech;
     private int peakSeen;
     private long quietSince;
+    private int noiseFloor;
+    private int speechLevel = MIN_SPEECH_LEVEL;
+    private int silenceLevel = MIN_SILENCE_LEVEL;
+    private final java.util.List<Integer> floorSamples = new java.util.ArrayList<>();
     @NonNull private Stop stopReason = Stop.BY_HAND;
 
     public boolean isRecording() {
@@ -113,6 +141,10 @@ public final class VoiceRecorder {
         this.heardSpeech = false;
         this.peakSeen = 0;
         this.quietSince = 0;
+        this.noiseFloor = 0;
+        this.speechLevel = MIN_SPEECH_LEVEL;
+        this.silenceLevel = MIN_SILENCE_LEVEL;
+        this.floorSamples.clear();
         this.stopReason = Stop.BY_HAND;
 
         File file = new File(context.getCacheDir(), "question.m4a");
@@ -237,10 +269,28 @@ public final class VoiceRecorder {
                     peakSeen = amplitude;
                 }
                 long elapsed = System.currentTimeMillis() - startedAt;
-                if (amplitude >= SPEECH_LEVEL) {
+
+                if (elapsed < FLOOR_WINDOW_MS) {
+                    // Still listening to the room. Nothing is judged speech or silence yet:
+                    // deciding against a threshold that has not been set would make the first
+                    // word of every question the thing that sets it.
+                    floorSamples.add(amplitude);
+                    main.postDelayed(this, LEVEL_INTERVAL_MS);
+                    return;
+                }
+                if (noiseFloor == 0) {
+                    noiseFloor = medianOf(floorSamples);
+                    speechLevel = Math.max(MIN_SPEECH_LEVEL,
+                            Math.round(noiseFloor * SPEECH_OVER_FLOOR));
+                    silenceLevel = Math.max(MIN_SILENCE_LEVEL,
+                            Math.round(noiseFloor * SILENCE_OVER_FLOOR));
+                    c.onFloor(noiseFloor, speechLevel);
+                }
+
+                if (amplitude >= speechLevel) {
                     heardSpeech = true;
                     quietSince = 0;
-                } else if (amplitude < SILENCE_LEVEL) {
+                } else if (amplitude < silenceLevel) {
                     if (quietSince == 0) {
                         quietSince = System.currentTimeMillis();
                     }
@@ -282,6 +332,21 @@ public final class VoiceRecorder {
         if (c != null) {
             c.onFailed(reason);
         }
+    }
+
+    /**
+     * The middle of the samples, not the loudest or the quietest of them. A maximum would be
+     * set by one door closing; a minimum by the gap between two fan pulses. The middle is the
+     * room.
+     */
+    private static int medianOf(@NonNull java.util.List<Integer> samples) {
+        if (samples.isEmpty()) {
+            return 0;
+        }
+        java.util.List<Integer> sorted = new java.util.ArrayList<>(samples);
+        java.util.Collections.sort(sorted);
+        int middle = sorted.get(sorted.size() / 2);
+        return Math.min(FLOOR_CAP, middle);
     }
 
     private static void release(@NonNull MediaRecorder r) {

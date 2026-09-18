@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Native-style tonal button, mirroring the launcher's rounded surfaces: a tint of the
-     text colour, darker when pressed, no Material chrome. -->
+<!-- Native-style button face, the same shape vocabulary the launcher and MG4 360 Camera use:
+     a tonal wash with the pressed state carrying the feedback, and no Material ripple.
+
+     The outline is transparent by day and a faint white at night. That is not decoration: at
+     night the wash is a white tint over a charcoal ground and its edges dissolve into it, so
+     the border is what still says where the button ends. -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
-            <corners android:radius="@dimen/native_button_radius" />
             <solid android:color="@color/button_surface_pressed" />
+            <stroke android:width="1dp" android:color="@color/button_border" />
+            <corners android:radius="@dimen/native_button_radius" />
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
-            <corners android:radius="@dimen/native_button_radius" />
             <solid android:color="@color/button_surface" />
+            <stroke android:width="1dp" android:color="@color/button_border" />
+            <corners android:radius="@dimen/native_button_radius" />
         </shape>
     </item>
 </selector>

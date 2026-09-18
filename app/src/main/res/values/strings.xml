@@ -69,4 +69,35 @@
 
     <string name="status_nothing_heard_peak">Nothing was said (peak %1$d)</string>
     <string name="talk_listening_hint">Speak — it stops when you do</string>
+
+    <string name="settings_title">Settings</string>
+    <string name="settings_cost_notice">These services are paid per use. Every question costs a transcription, an answer and, if it is spoken, the synthesis of it. You are billed by OpenAI or xAI on your own account, not through this app. Keep an eye on it and use a key with a spending limit.</string>
+    <string name="settings_openai_key">OpenAI key — needed for hearing and speaking, and for answers if you choose OpenAI</string>
+    <string name="settings_openai_hint">sk-...</string>
+    <string name="settings_xai_key">xAI key — answers only, optional</string>
+    <string name="settings_xai_hint">xai-...</string>
+    <string name="settings_provider">Answers: %1$s</string>
+    <string name="settings_model">Model: %1$s</string>
+    <string name="settings_model_auto">automatic</string>
+    <string name="settings_model_pick">Which model answers</string>
+    <string name="settings_voice_pick">Which voice speaks</string>
+    <string name="settings_speech_notice">Hearing and speaking always go to OpenAI: xAI publishes no transcription or speech service.</string>
+    <string name="settings_speech_missing">Without an OpenAI key the assistant cannot hear you, whichever service answers.</string>
+    <string name="settings_no_xai_key">No xAI key entered</string>
+    <string name="settings_no_openai_key">No OpenAI key entered</string>
+    <string name="settings_no_key_at_all">Enter a key first</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="status_floor">Room: %1$d, speech above %2$d</string>
+    <string name="section_mediakey">Steering wheel as media key</string>
+
+    <string name="settings_wheel">Wheel button opens the app: %1$s</string>
+    <string name="settings_wheel_explain">Only a long press, and only if this car sends its voice key as a media button — which the diagnostics screen will tell you. Leave it off until you know: a short press of play or pause belongs to whatever is playing music.</string>
+    <string name="on">on</string>
+    <string name="off">off</string>
+
+    <string name="settings_section_cost">What it costs</string>
+    <string name="settings_section_keys">Keys</string>
+    <string name="settings_section_conversation">Conversation</string>
+    <string name="settings_section_wheel">Steering wheel</string>
 </resources>

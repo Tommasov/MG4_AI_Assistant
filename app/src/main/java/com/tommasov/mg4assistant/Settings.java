@@ -37,6 +37,7 @@ public final class Settings {
     private static final String KEY_MODEL = "chat_model";
     private static final String KEY_VOICE = "remote_voice";
     private static final String KEY_CAR_VOICE = "use_car_voice";
+    private static final String KEY_WHEEL_START = "wheel_starts_app";
 
     private final SharedPreferences prefs;
 
@@ -140,6 +141,22 @@ public final class Settings {
 
     public void setVoice(@NonNull String voice) {
         prefs.edit().putString(KEY_VOICE, voice).apply();
+    }
+
+    /**
+     * Whether a long press on the wheel opens the assistant.
+     *
+     * <p>Off by default and deliberately so: the wheel's transport keys belong to whatever is
+     * playing, and an app that opened itself on a track skip would be worse than no shortcut
+     * at all. Which key this car's voice button actually reports is not yet known, so this
+     * stays off until the diagnostics screen says what arrives.
+     */
+    public boolean wheelStartsApp() {
+        return prefs.getBoolean(KEY_WHEEL_START, false);
+    }
+
+    public void setWheelStartsApp(boolean value) {
+        prefs.edit().putBoolean(KEY_WHEEL_START, value).apply();
     }
 
     public boolean useCarVoice() {
