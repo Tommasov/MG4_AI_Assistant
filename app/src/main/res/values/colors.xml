@@ -25,4 +25,16 @@
     <!-- Placeholder text: dimmer than secondary. Same tint the SAIC tab bar uses for
          unselected tabs, carried through the launcher and MG4 360 Camera. -->
     <color name="text_tertiary">#503c4143</color>
+
+    <!-- The service badge, with MG4 360 Camera's values and its reasoning: traffic-light
+         semantics, because the question asked at a glance is "is it working", and an answer
+         that needs the label read is no answer at all.
+
+         Green is a service that answered when it was last asked. Amber is a key that is
+         there but has never been accepted — which is also a key that has just been refused,
+         and looks the same from here because a refusal and a flat aerial are the same
+         silence. Grey is nothing entered. -->
+    <color name="badge_ok">#2e7d32</color>
+    <color name="badge_unchecked">#b26a00</color>
+    <color name="badge_off">#1f3c4143</color>
 </resources>

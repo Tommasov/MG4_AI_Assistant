@@ -23,6 +23,10 @@
     <dimen name="talk_text_size">34sp</dimen>
     <dimen name="level_height">8dp</dimen>
     <dimen name="status_text_size">22sp</dimen>
+
+    <!-- The service badge. Read at a glance from the driving position, so a dot rather than
+         a tick: colour survives the distance, a glyph does not. -->
+    <dimen name="badge_size">24dp</dimen>
     <!-- The answer is the thing being read; everything else on screen is scaffolding. -->
     <dimen name="reply_text_size">30sp</dimen>
 

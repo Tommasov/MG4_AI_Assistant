@@ -49,7 +49,7 @@
     <string name="status_limit">Fermato al limite di 30 secondi</string>
     <string name="status_nothing_heard">Non ho sentito niente</string>
     <string name="status_cost">Ascoltato per %1$d s</string>
-    <string name="error_no_key">Questa build non ha una chiave API</string>
+    <string name="error_no_key">Nessuna chiave API — inseriscila in Impostazioni</string>
     <string name="error_mic_denied">Senza il permesso del microfono non c\'è niente da registrare</string>
     <string name="error_no_model">Non sono riuscito a capire che modello usare: %1$s</string>
 
@@ -69,9 +69,7 @@
 
     <string name="settings_title">Impostazioni</string>
     <string name="settings_cost_notice">Questi servizi si pagano a consumo. Ogni domanda costa una trascrizione, una risposta e, se viene letta ad alta voce, anche la sintesi. A fatturare sono OpenAI o xAI sul tuo account, non quest\'app. Tieni d\'occhio la spesa e usa una chiave con un tetto.</string>
-    <string name="settings_openai_key">Chiave OpenAI — serve per sentire e parlare, e per le risposte se scegli OpenAI</string>
     <string name="settings_openai_hint">sk-...</string>
-    <string name="settings_xai_key">Chiave xAI — solo per le risposte, facoltativa</string>
     <string name="settings_xai_hint">xai-...</string>
     <string name="settings_provider">Risponde: %1$s</string>
     <string name="settings_model">Modello: %1$s</string>
@@ -102,4 +100,36 @@
     <string name="settings_usage_summary">Dal %1$s: %2$d domande, %3$.1f minuti ascoltati, %4$.1fk token, %5$.1fk caratteri pronunciati.</string>
     <string name="settings_usage_reset">Ricomincia il conteggio</string>
     <string name="settings_usage_reset_explain">I numeri tornano a zero e ripartono da oggi. Non viene inviato niente e non cambia niente sul tuo account: questo è solo quello che ha contato l\'app.</string>
+    <string name="settings_keys_notice">L\'app risponde sul tuo account, con la tua chiave. La via più comoda è un file: salva la chiave in un file di testo — il nome è indifferente — portalo in auto e premi Da un file.</string>
+    <string name="settings_keys_builtin">Questa build ha una chiave sua, quindi funziona anche senza che tu ne inserisca una. Se metti la tua, prende il posto di quella.</string>
+    <string name="settings_keys_hint">Il file può arrivare da una chiavetta USB o dalla cartella Download. Va bene anche scaricarlo con MG4 Browser, ma importalo subito: il browser fa pulizia dei propri scaricati.\n\nVerde vuol dire che il servizio ha risposto l\'ultima volta che gli è stato chiesto, ambra che la chiave c\'è ma non è stata accettata. Tocca un servizio per verificarlo di nuovo o rimuoverlo.</string>
+    <string name="key_state_openai">OpenAI — sentire, parlare e rispondere: %1$s</string>
+    <string name="key_state_xai">xAI — solo le risposte, facoltativa: %1$s</string>
+    <string name="key_state_none">non impostata</string>
+    <string name="key_from_file">Da un file</string>
+    <string name="key_paste">Incolla</string>
+    <string name="key_type">Scrivila</string>
+    <string name="key_type_title">La chiave</string>
+    <string name="key_origin_clipboard">appunti</string>
+    <string name="key_origin_typed">testo digitato</string>
+    <string name="key_saved">Chiave presa da: %1$s</string>
+    <string name="key_clipboard_empty">Negli appunti non c\'è una chiave</string>
+    <string name="key_searching">Cerco un file con dentro una chiave…</string>
+    <string name="key_none_found_title">Nessuna chiave trovata</string>
+    <string name="key_none_found">Non ho trovato niente da cui leggere una chiave.\n\nSalva la chiave in un file di testo — il nome è indifferente, mg4-key.txt va benissimo — e mettilo su una chiavetta USB o nella cartella Download. Va bene anche scaricarlo con MG4 Browser, purché lo importi prima che il browser faccia pulizia dei suoi scaricati. La chiave può stare su una riga per conto suo, con attorno quello che vuoi.</string>
+    <string name="key_pick">Quale chiave?</string>
+    <string name="key_not_a_key">Questa non è una chiave. Quelle OpenAI iniziano con sk-, quelle xAI con xai-.</string>
+    <string name="key_storage_why">Per cercare tra i file dell\'auto — Download, una chiavetta USB, quello che ha scaricato il browser — serve il permesso di leggere la memoria. Non legge altro e non manda niente da nessuna parte.</string>
+    <string name="key_checking">Verifico la chiave con il servizio…</string>
+    <string name="key_works_title">La chiave funziona</string>
+    <string name="key_works">Il servizio ha risposto e offre %1$d modelli per la conversazione.</string>
+    <string name="key_refused_title">Chiave rifiutata</string>
+    <string name="key_refused">%1$s\n\nL\'ho salvata lo stesso, semmai l\'auto fosse solo offline.</string>
+    <string name="key_remove">Rimuovi</string>
+    <string name="key_found_title">Chiave trovata</string>
+    <string name="key_found_confirm">%1$s\n\nletta da %2$s</string>
+    <string name="key_use">Usala</string>
+    <string name="key_row_title">Questo servizio</string>
+    <string name="key_row_explain">%1$s\n\nVerifica chiede al servizio se la chiave funziona ancora. Rimuovi la dimentica qui; presso il servizio non viene annullato niente.</string>
+    <string name="key_check">Verifica</string>
 </resources>

@@ -92,26 +92,76 @@
                 android:text="@string/settings_section_keys" />
 
             <TextView
-                style="@style/FieldLabel"
-                android:text="@string/settings_openai_key" />
+                android:id="@+id/keys_notice"
+                style="@style/Notice" />
 
-            <EditText
-                android:id="@+id/key_openai"
-                style="@style/Field"
-                android:hint="@string/settings_openai_hint"
-                android:importantForAutofill="no"
-                android:inputType="textVisiblePassword" />
+            <!-- The keys are shown masked and are themselves the control: tapping one
+                 offers to check it again or to forget it. The old screen had a text field per
+                 service holding 164 visible characters, which was unreadable, indiscreet with
+                 a passenger, and the only way in. -->
+            <LinearLayout
+                android:id="@+id/key_openai_row"
+                style="@style/BadgeRow"
+                android:layout_marginTop="@dimen/row_gap">
+
+                <View
+                    android:id="@+id/key_openai_badge"
+                    style="@style/Badge" />
+
+                <TextView
+                    android:id="@+id/key_openai_state"
+                    style="@style/Notice"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginTop="0dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/key_xai_row"
+                style="@style/BadgeRow">
+
+                <View
+                    android:id="@+id/key_xai_badge"
+                    style="@style/Badge" />
+
+                <TextView
+                    android:id="@+id/key_xai_state"
+                    style="@style/Notice"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginTop="0dp" />
+            </LinearLayout>
+
+            <!-- One row for both services. A key states which service it belongs to in its
+                 own first characters, so asking first would be asking for something the key
+                 already carries. -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/row_gap"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/key_from_file"
+                    style="@style/TonalButton"
+                    android:layout_marginEnd="@dimen/button_gap"
+                    android:text="@string/key_from_file" />
+
+                <Button
+                    android:id="@+id/key_paste"
+                    style="@style/TonalButton"
+                    android:layout_marginEnd="@dimen/button_gap"
+                    android:text="@string/key_paste" />
+
+                <Button
+                    android:id="@+id/key_type"
+                    style="@style/TonalButton"
+                    android:text="@string/key_type" />
+            </LinearLayout>
 
             <TextView
-                style="@style/FieldLabel"
-                android:text="@string/settings_xai_key" />
-
-            <EditText
-                android:id="@+id/key_xai"
-                style="@style/Field"
-                android:hint="@string/settings_xai_hint"
-                android:importantForAutofill="no"
-                android:inputType="textVisiblePassword" />
+                style="@style/Hint"
+                android:text="@string/settings_keys_hint" />
 
             <View style="@style/Hairline" />
 

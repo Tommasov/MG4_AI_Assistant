@@ -6,6 +6,12 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
+    <!-- Only to go looking for a file with an API key in it, and only when that button is
+         pressed. An OpenAI key is 164 characters and this head unit has a touchscreen
+         keyboard; carrying the key on a USB stick or downloading it with MG4 Browser is the
+         difference between the app being usable by someone else and not. -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <!-- Declared rather than required: a head unit that turns out not to expose a microphone
          to ordinary apps is exactly the finding this build exists to make, and requiring the
          feature would stop it installing before it could report that. -->

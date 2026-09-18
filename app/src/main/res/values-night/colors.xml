@@ -37,4 +37,10 @@
     <color name="hairline">#1fffffff</color>
     <!-- Placeholder text at night, from the launcher's own values-night palette. -->
     <color name="text_tertiary">#52ffffff</color>
+
+    <!-- The badge lightens at night, same as MG4 360 Camera's: the day green on a charcoal
+         ground reads as a dark smudge rather than as a colour. -->
+    <color name="badge_ok">#66bb6a</color>
+    <color name="badge_unchecked">#ffb74d</color>
+    <color name="badge_off">#26ffffff</color>
 </resources>

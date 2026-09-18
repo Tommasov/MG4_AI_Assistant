@@ -1,20 +1,21 @@
 package com.tommasov.mg4assistant;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import com.tommasov.mg4assistant.keys.KeyEntry;
+import com.tommasov.mg4assistant.keys.KeyFinder;
 import com.tommasov.mg4assistant.probe.ChatApi;
 import com.tommasov.mg4assistant.voice.CarVoice;
 import com.tommasov.mg4assistant.voice.RemoteVoice;
@@ -39,8 +40,9 @@ public class SettingsActivity extends AppCompatActivity {
     private final RemoteVoice sampleVoice = new RemoteVoice();
     private final Handler main = new Handler(Looper.getMainLooper());
 
-    private EditText openAiField;
-    private EditText xaiField;
+    private KeyEntry keyEntry;
+    private TextView openAiState;
+    private TextView xaiState;
     private Button providerButton;
     private Button modelButton;
     private Button voiceButton;
@@ -53,8 +55,9 @@ public class SettingsActivity extends AppCompatActivity {
         settings = new Settings(this);
         usage = new Usage(this);
 
-        openAiField = findViewById(R.id.key_openai);
-        xaiField = findViewById(R.id.key_xai);
+        keyEntry = new KeyEntry(this, settings, this::show);
+        openAiState = findViewById(R.id.key_openai_state);
+        xaiState = findViewById(R.id.key_xai_state);
         providerButton = findViewById(R.id.button_provider);
         modelButton = findViewById(R.id.button_model);
         voiceButton = findViewById(R.id.button_voice);
@@ -73,13 +76,13 @@ public class SettingsActivity extends AppCompatActivity {
         findViewById(R.id.button_diagnostics).setOnClickListener(
                 v -> startActivity(new Intent(this, ProbeActivity.class)));
 
-        openAiField.setText(settings.openAiKey());
-        xaiField.setText(settings.xaiKey());
-        // Saved as they are typed rather than behind a Save button: there is no draft state
-        // worth protecting here, and a key entered and then lost to a back press would be a
-        // small disaster on a screen with no keyboard worth the name.
-        openAiField.addTextChangedListener(saveTo(true));
-        xaiField.addTextChangedListener(saveTo(false));
+        findViewById(R.id.key_from_file).setOnClickListener(v -> keyEntry.fromFile());
+        findViewById(R.id.key_paste).setOnClickListener(v -> keyEntry.paste());
+        findViewById(R.id.key_type).setOnClickListener(v -> keyEntry.type());
+        // The key itself is the control for removing it. Nothing else on this screen is worth
+        // a delete button, and a fourth button in that row would be the one pressed by mistake.
+        findViewById(R.id.key_openai_row).setOnClickListener(v -> keyEntry.openKey(true));
+        findViewById(R.id.key_xai_row).setOnClickListener(v -> keyEntry.openKey(false));
 
         providerButton.setOnClickListener(v -> toggleProvider());
         modelButton.setOnClickListener(v -> chooseModel());
@@ -92,27 +95,52 @@ public class SettingsActivity extends AppCompatActivity {
         show();
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        keyEntry.onPermissionResult(requestCode, grantResults);
+    }
+
+    /**
+     * The keys as they should be seen: masked, and labelled with what each one is for.
+     *
+     * <p>Which service needs which is not obvious and getting it wrong is expensive in
+     * confusion: xAI answers questions and has neither transcription nor speech, so an OpenAI
+     * key is required for the app to hear or speak at all, whatever answers.
+     */
+    private void showKeys() {
+        openAiState.setText(getString(R.string.key_state_openai, describe(settings.enteredOpenAiKey())));
+        xaiState.setText(getString(R.string.key_state_xai, describe(settings.enteredXaiKey())));
+        paintBadge(R.id.key_openai_badge, settings.openAiKey(),
+                settings.keyVerified(Settings.PROVIDER_OPENAI));
+        paintBadge(R.id.key_xai_badge, settings.xaiKey(),
+                settings.keyVerified(Settings.PROVIDER_XAI));
+        TextView notice = findViewById(R.id.keys_notice);
+        notice.setText(settings.usingBuiltInKey()
+                ? getString(R.string.settings_keys_builtin)
+                : getString(R.string.settings_keys_notice));
+    }
+
     @NonNull
-    private TextWatcher saveTo(boolean openAi) {
-        return new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int a, int b, int c) {
-            }
+    private String describe(@NonNull String key) {
+        return key.isEmpty() ? getString(R.string.key_state_none) : KeyFinder.mask(key);
+    }
 
-            @Override
-            public void onTextChanged(CharSequence s, int a, int b, int c) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable e) {
-                if (openAi) {
-                    settings.setOpenAiKey(e.toString());
-                } else {
-                    settings.setXaiKey(e.toString());
-                }
-                show();
-            }
-        };
+    /**
+     * Green, amber or grey, on the effective key rather than the entered one.
+     *
+     * <p>The distinction matters in a debug build: a key compiled in is a service that is
+     * genuinely hooked up, and a grey dot beside a service answering questions would be the
+     * screen contradicting the app. It shows amber, which is the truth — it is there and
+     * nobody has checked it.
+     */
+    private void paintBadge(int id, @NonNull String key, boolean verified) {
+        int colour = key.isEmpty()
+                ? R.color.badge_off
+                : (verified ? R.color.badge_ok : R.color.badge_unchecked);
+        findViewById(id).setBackgroundTintList(
+                ColorStateList.valueOf(ContextCompat.getColor(this, colour)));
     }
 
     private void show() {
@@ -132,6 +160,7 @@ public class SettingsActivity extends AppCompatActivity {
                 getString(settings.wheelStartsApp() ? R.string.on : R.string.off)));
 
         showUsage();
+        showKeys();
 
         TextView notice = findViewById(R.id.speech_notice);
         notice.setText(settings.canHear()

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tinted at runtime rather than being three drawables: the shape never changes, only which
+     of the three badge colours fills it.
+
+     Opaque white underneath, and that is not a detail. A tint is applied SRC_IN, so the alpha
+     of whatever is underneath survives it: filling this with the grey off-colour, which is
+     twelve per cent black, turned every badge into a pale smudge of the right hue. White at
+     full alpha lets each tint arrive at the strength it was chosen at, the faint grey one
+     included. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="#ffffffff" />
+</shape>

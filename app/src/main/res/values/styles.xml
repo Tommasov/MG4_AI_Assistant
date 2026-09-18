@@ -57,6 +57,27 @@
         <item name="android:textSize">@dimen/status_text_size</item>
     </style>
 
+    <!-- A service's state, beside its name. -->
+    <style name="Badge" parent="">
+        <item name="android:layout_width">@dimen/badge_size</item>
+        <item name="android:layout_height">@dimen/badge_size</item>
+        <item name="android:layout_marginEnd">@dimen/button_gap</item>
+        <item name="android:background">@drawable/badge_dot</item>
+    </style>
+
+    <!-- The row a badge and a service name share. Clickable as one thing: the target is the
+         whole row, not the twenty-four pixels of the dot. -->
+    <style name="BadgeRow" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
     <style name="Hairline" parent="">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/hairline_height</item>

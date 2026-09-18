@@ -34,20 +34,6 @@ android {
         versionCode = 1
         versionName = "0.1-probe"
 
-        // The chat API key, compiled in — and this is the one thing about this build that
-        // must not be forgotten.
-        //
-        // The field on screen was meant to keep it out of the APK, on the assumption that a
-        // key could be pasted into the car. It cannot: the head unit has no clipboard worth
-        // the name and nowhere to paste into, and an OpenAI key is 164 characters nobody is
-        // typing on a touchscreen at a standstill. So for a private build it goes in here.
-        //
-        // The consequence is firm: an APK built with a key in apikeys.properties MUST NOT go
-        // into apps.json. BuildConfig constants come straight out of a dex with grep, and
-        // this key has credit attached to it. Before anyone else gets a build, the key has to
-        // come out and be replaced by a way for them to enter their own.
-        buildConfigField("String", "API_KEY", "\"${apiKeys.getProperty("api.key", "")}\"")
-
         // The author's report endpoint. Write-only by design: it accepts a report and can do
         // nothing else — no reading back, no listing, no deleting, with any key. That is what
         // makes it safe to ship the write key inside an APK, which this one does.
@@ -83,7 +69,25 @@ android {
     }
 
     buildTypes {
+        // The chat API key is a build-type decision, not a default, and this is the whole of
+        // the reason.
+        //
+        // It used to sit in defaultConfig, which meant every build carried whatever was in
+        // apikeys.properties and the rule "this APK must not go into apps.json" was enforced
+        // by memory alone. BuildConfig constants come straight out of a dex with grep and
+        // this key has credit attached, so memory was not good enough. Now a release cannot
+        // carry one: the constant is empty whatever the properties file says, and the key
+        // arrives on the car as a file instead — see KeyFinder.
+        debug {
+            buildConfigField(
+                "String",
+                "API_KEY",
+                "\"${apiKeys.getProperty("api.key", "")}\""
+            )
+        }
+
         release {
+            buildConfigField("String", "API_KEY", "\"\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

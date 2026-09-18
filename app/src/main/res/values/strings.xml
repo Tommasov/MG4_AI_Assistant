@@ -52,7 +52,7 @@
     <string name="status_limit">Stopped at the 30 second limit</string>
     <string name="status_nothing_heard">Nothing was said</string>
     <string name="status_cost">Listened for %1$d s</string>
-    <string name="error_no_key">No API key in this build</string>
+    <string name="error_no_key">No API key — add yours in Settings</string>
     <string name="error_mic_denied">Without the microphone permission there is nothing to record</string>
     <string name="error_no_model">Could not work out which model to use: %1$s</string>
 
@@ -72,9 +72,7 @@
 
     <string name="settings_title">Settings</string>
     <string name="settings_cost_notice">These services are paid per use. Every question costs a transcription, an answer and, if it is spoken, the synthesis of it. You are billed by OpenAI or xAI on your own account, not through this app. Keep an eye on it and use a key with a spending limit.</string>
-    <string name="settings_openai_key">OpenAI key — needed for hearing and speaking, and for answers if you choose OpenAI</string>
     <string name="settings_openai_hint">sk-...</string>
-    <string name="settings_xai_key">xAI key — answers only, optional</string>
     <string name="settings_xai_hint">xai-...</string>
     <string name="settings_provider">Answers: %1$s</string>
     <string name="settings_model">Model: %1$s</string>
@@ -105,4 +103,36 @@
     <string name="settings_usage_summary">Since %1$s: %2$d questions, %3$.1f minutes listened, %4$.1fk tokens, %5$.1fk characters spoken.</string>
     <string name="settings_usage_reset">Start a new count</string>
     <string name="settings_usage_reset_explain">The figures go back to zero and start again from today. Nothing is sent anywhere and nothing about your account changes — this is only what this app has counted.</string>
+    <string name="settings_keys_notice">This app answers on your own account, with your own key. The easiest way in is a file: save the key in a text file — any name will do — get it onto the car, and press From a file.</string>
+    <string name="settings_keys_builtin">This build carries a key of its own, so it works without one being entered. Enter yours and it takes over.</string>
+    <string name="settings_keys_hint">A file can arrive on a USB stick or in the Download folder. One downloaded with MG4 Browser works too, but import it straight away: the browser clears its own downloads.\n\nGreen means the service answered when it was last asked, amber that a key is there but has not been accepted. Tap a service to check it again or remove it.</string>
+    <string name="key_state_openai">OpenAI — hearing, speaking and answers: %1$s</string>
+    <string name="key_state_xai">xAI — answers only, optional: %1$s</string>
+    <string name="key_state_none">not set</string>
+    <string name="key_from_file">From a file</string>
+    <string name="key_paste">Paste</string>
+    <string name="key_type">Type it</string>
+    <string name="key_type_title">The key</string>
+    <string name="key_origin_clipboard">the clipboard</string>
+    <string name="key_origin_typed">typed by hand</string>
+    <string name="key_saved">Key taken from: %1$s</string>
+    <string name="key_clipboard_empty">There is no key in the clipboard</string>
+    <string name="key_searching">Looking for a file with a key in it…</string>
+    <string name="key_none_found_title">No key found</string>
+    <string name="key_none_found">Nothing was found to read a key from.\n\nSave the key in a text file — the name does not matter, mg4-key.txt is as good as any — and put it on a USB stick or in the Download folder. Downloading it with MG4 Browser works as well, as long as it is imported before the browser tidies its downloads away. The key can sit on a line of its own with anything else around it.</string>
+    <string name="key_pick">Which key?</string>
+    <string name="key_not_a_key">That is not a key. OpenAI keys begin with sk-, xAI keys with xai-.</string>
+    <string name="key_storage_why">To look through the files on this car — Download, a USB stick, what the browser downloaded — the app needs permission to read storage. It reads nothing else and sends nothing anywhere.</string>
+    <string name="key_checking">Checking the key with the service…</string>
+    <string name="key_works_title">The key works</string>
+    <string name="key_works">The service answered and offers %1$d models for conversation.</string>
+    <string name="key_refused_title">The key was refused</string>
+    <string name="key_refused">%1$s\n\nIt has been saved anyway, in case the car is simply offline.</string>
+    <string name="key_remove">Remove</string>
+    <string name="key_found_title">Key found</string>
+    <string name="key_found_confirm">%1$s\n\nread from %2$s</string>
+    <string name="key_use">Use it</string>
+    <string name="key_row_title">This service</string>
+    <string name="key_row_explain">%1$s\n\nCheck asks the service whether the key still works. Remove forgets it here; nothing is cancelled at the service.</string>
+    <string name="key_check">Check</string>
 </resources>

@@ -38,6 +38,8 @@ public final class Settings {
     private static final String KEY_VOICE = "remote_voice";
     private static final String KEY_CAR_VOICE = "use_car_voice";
     private static final String KEY_WHEEL_START = "wheel_starts_app";
+    private static final String KEY_OPENAI_OK = "openai_key_verified";
+    private static final String KEY_XAI_OK = "xai_key_verified";
 
     private final SharedPreferences prefs;
 
@@ -70,11 +72,63 @@ public final class Settings {
     }
 
     public void setOpenAiKey(@NonNull String key) {
-        prefs.edit().putString(KEY_OPENAI, key.trim()).apply();
+        // The verdict belongs to the key that earned it. Storing a new key clears it, so the
+        // badge can never claim that a key the service has never seen is known to work.
+        prefs.edit().putString(KEY_OPENAI, key.trim()).remove(KEY_OPENAI_OK).apply();
     }
 
     public void setXaiKey(@NonNull String key) {
-        prefs.edit().putString(KEY_XAI, key.trim()).apply();
+        prefs.edit().putString(KEY_XAI, key.trim()).remove(KEY_XAI_OK).apply();
+    }
+
+    /**
+     * Whether the service accepted this key the last time it was asked.
+     *
+     * <p>Remembered rather than re-checked on every visit to the screen: a check is a network
+     * round trip, and a settings screen that reaches for the aerial each time it is opened is
+     * a settings screen that is slow in a tunnel. It is a record of the last answer, not a
+     * live state, which is why a key that stops working shows green until it is checked again
+     * — the tap on the row is there for exactly that.
+     */
+    public boolean keyVerified(@NonNull String provider) {
+        return prefs.getBoolean(PROVIDER_XAI.equals(provider) ? KEY_XAI_OK : KEY_OPENAI_OK,
+                false);
+    }
+
+    public void setKeyVerified(@NonNull String provider, boolean verified) {
+        prefs.edit()
+                .putBoolean(PROVIDER_XAI.equals(provider) ? KEY_XAI_OK : KEY_OPENAI_OK, verified)
+                .apply();
+    }
+
+    /**
+     * True when nothing was entered here and the build brought a key of its own.
+     *
+     * <p>Only ever true of a debug build: a release carries an empty constant by construction,
+     * because a key in a dex comes out with grep. Worth saying on screen rather than leaving
+     * someone to wonder why an app with no key entered is answering questions.
+     */
+    /**
+     * What was actually entered on this car, with no fallback to the build.
+     *
+     * <p>The screen has to show this rather than {@link #openAiKey()}: a debug build with a
+     * key of its own would otherwise display a key beside a button offering to remove it, and
+     * pressing that button would appear to do nothing at all.
+     */
+    @NonNull
+    public String enteredOpenAiKey() {
+        return prefs.getString(KEY_OPENAI, "");
+    }
+
+    @NonNull
+    public String enteredXaiKey() {
+        return prefs.getString(KEY_XAI, "");
+    }
+
+    public boolean usingBuiltInKey() {
+        return prefs.getString(KEY_OPENAI, "").isEmpty()
+                && prefs.getString(KEY_XAI, "").isEmpty()
+                && !ChatApi.builtInKey().isEmpty();
     }
 
     // ---------------------------------------------------------------- provider
