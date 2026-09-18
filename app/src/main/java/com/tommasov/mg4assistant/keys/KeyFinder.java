@@ -1,11 +1,15 @@
 package com.tommasov.mg4assistant.keys;
 
+import android.Manifest;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Environment;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -244,6 +248,73 @@ public final class KeyFinder {
             return path.substring("/storage/".length());
         }
         return path;
+    }
+
+    /**
+     * Every place a key is looked for, and whether it can actually be reached.
+     *
+     * <p>For the diagnostics report, and it answers a question that otherwise only fails in
+     * the field: whether a USB stick in this particular head unit turns up under
+     * {@code /storage} the way it does on an ordinary Android device. That is a deduction
+     * until a car says otherwise, and if it is wrong then the one way an owner has of getting
+     * a key into this app quietly does not work. Printed whether or not a key is present, so
+     * a failed import can be told apart from an empty stick.
+     */
+    @NonNull
+    public static String describeSearchPath(@NonNull Context context) {
+        StringBuilder sb = new StringBuilder();
+        // Stated first, because without it every line below reads as a failure of the car
+        // rather than of the app: the first report from the vehicle said "unreadable —
+        // permission refused?" about folders nobody had ever asked permission for.
+        boolean granted = ContextCompat.checkSelfPermission(context,
+                Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        sb.append("  storage permission: ").append(granted ? "granted\n"
+                : "NOT GRANTED — nothing below can be read until it is. Settings > KEYS > "
+                + "From a file asks for it.\n");
+        describeOne(sb, "app folder (no permission needed)", context.getExternalFilesDir(null));
+        describeOne(sb, "Download",
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
+        File external = Environment.getExternalStorageDirectory();
+        describeOne(sb, "MG4 Browser downloads", new File(external, BROWSER_DOWNLOADS));
+        describeOne(sb, "storage root", external);
+
+        List<File> volumes = usbVolumes();
+        if (volumes.isEmpty()) {
+            sb.append("  removable volumes: none mounted under /storage\n");
+        } else {
+            for (File volume : volumes) {
+                describeOne(sb, "removable " + volume.getName(), volume);
+            }
+        }
+        return sb.toString();
+    }
+
+    private static void describeOne(@NonNull StringBuilder sb, @NonNull String label,
+                                    @Nullable File dir) {
+        sb.append("  ").append(label).append(": ");
+        if (dir == null) {
+            sb.append("unavailable\n");
+            return;
+        }
+        if (!dir.exists()) {
+            sb.append("not there (").append(dir.getAbsolutePath()).append(")\n");
+            return;
+        }
+        if (!dir.canRead()) {
+            sb.append("there, but unreadable\n");
+            return;
+        }
+        File[] entries = dir.listFiles();
+        int readable = 0;
+        if (entries != null) {
+            for (File entry : entries) {
+                if (isWorthOpening(entry)) {
+                    readable++;
+                }
+            }
+        }
+        sb.append("readable, ").append(entries == null ? 0 : entries.length)
+                .append(" entries, ").append(readable).append(" worth opening\n");
     }
 
     /** The first key-shaped thing in a piece of text, or empty. */

@@ -62,7 +62,6 @@
     <string name="status_spoken_by_car">Spoken by the car, no data used</string>
     <string name="status_spoken_remote">Spoken in %1$d ms</string>
     <string name="cd_back">Back</string>
-    <string name="section_hardkey">Steering wheel key</string>
 
     <string name="voice_remote_named">Voice: %1$s</string>
     <string name="voice_sample">This is how I will read the answers.</string>
@@ -87,7 +86,6 @@
     <string name="action_settings">Settings</string>
 
     <string name="status_floor">Room: %1$d, speech above %2$d</string>
-    <string name="section_mediakey">Steering wheel as media key</string>
 
     <string name="settings_wheel">Opens the app: %1$s</string>
     <string name="settings_wheel_explain">Only a long press, and only if this car sends its voice key as a media button — which the diagnostics screen will tell you. Leave it off until you know: a short press of play or pause belongs to whatever is playing music.</string>
@@ -135,4 +133,10 @@
     <string name="key_row_title">This service</string>
     <string name="key_row_explain">%1$s\n\nCheck asks the service whether the key still works. Remove forgets it here; nothing is cancelled at the service.</string>
     <string name="key_check">Check</string>
+    <string name="section_wheel">Steering wheel</string>
+    <string name="section_storage">Where a key file would be looked for</string>
+    <string name="wheel_watch">Watch the wheel</string>
+    <string name="wheel_watch_explain">For three minutes this screen keeps listening even when it is not in front, so that a press which opens the factory assistant still gets recorded. Everything that arrives is written down and survives the app being closed.\n\nWhile it runs, this app claims the media buttons, so play and pause may not reach the music player. It stops on its own after three minutes.</string>
+    <string name="wheel_watch_start">Watch for three minutes</string>
+    <string name="wheel_watch_started">Watching. Go and press the wheel: short, long, and twice quickly.</string>
 </resources>

@@ -36,9 +36,23 @@ public final class HardKeyWatch {
     /** The broadcast the factory voice service listens to. */
     public static final String ACTION = "com.saic.keyevent.hardkey.report";
 
-    private static final String EXTRA_KEYCODE = "android.intent.extra.hardkey.keycode";
-    private static final String EXTRA_DOWN = "android.intent.extra.hardkey.down";
-    private static final String EXTRA_LONGPRESS = "android.intent.extra.hardkey.longpress";
+    public static final String EXTRA_KEYCODE = "android.intent.extra.hardkey.keycode";
+    public static final String EXTRA_DOWN = "android.intent.extra.hardkey.down";
+    public static final String EXTRA_LONGPRESS = "android.intent.extra.hardkey.longpress";
+
+    /**
+     * The other two keys this wheel reports, named by the owner who pressed them in front of
+     * the log on 18 September 2026: the hollow star, which he has set to cycle regeneration,
+     * and the filled star, which he has set to open the camera.
+     *
+     * <p>Both are assignable from the car's own settings, which makes them the interesting
+     * ones: the voice key's short press belongs to the factory assistant and cannot be taken
+     * from it, while these two are the owner's to spend. Note that the broadcast arrives
+     * whatever they are assigned to — it reports the press, it does not replace the action —
+     * so listening for one of them here does not stop the camera opening.
+     */
+    public static final int KEYCODE_STAR_HOLLOW = 286;
+    public static final int KEYCODE_STAR_FILLED = 17;
 
     /**
      * The code the voice service compares against. Outside the range Android 9 defines — the
@@ -50,7 +64,8 @@ public final class HardKeyWatch {
     private static final int MAX_EVENTS = 12;
 
     public interface Listener {
-        void onEvent();
+        /** The event as a line, so whoever is listening can file it somewhere lasting. */
+        void onEvent(@NonNull String detail);
     }
 
     /** One press, for a caller that wants to act on it rather than print it. */
@@ -96,10 +111,11 @@ public final class HardKeyWatch {
                 boolean down = intent.getBooleanExtra(EXTRA_DOWN, false);
                 boolean longPress = intent.getBooleanExtra(EXTRA_LONGPRESS, false);
                 last = new Event(keycode, down, longPress);
-                add(clock.format(new Date()) + "  keycode " + keycode
+                String detail = "keycode " + keycode
                         + (keycode == KEYCODE_VOICE_WHEEL ? " (wheel voice)" : "")
-                        + ", down " + down + ", long " + longPress);
-                listener.onEvent();
+                        + ", down " + down + ", long " + longPress;
+                add(clock.format(new Date()) + "  " + detail);
+                listener.onEvent(detail);
             }
         };
         // Exported: the sender is the system, not this app.

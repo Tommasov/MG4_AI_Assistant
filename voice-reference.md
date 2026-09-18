@@ -128,6 +128,53 @@ Per avere testo libero dalla voce serve una trascrizione remota.
 accettati: è un altro giro di dexdump, questa volta su `SaicVoiceVui` (offuscato con
 ProGuard, quindi più faticoso).
 
+## Tasti al volante — `com.saic.keyevent.hardkey.report`
+
+### Verificato in auto (18/09/2026, AUTUS SAIC, adapter 3.4.0)
+
+Il broadcast **arriva a un'app qualunque** con un receiver registrato a runtime, per ogni
+pressione, con `down`/`up` e il flag di pressione lunga distinguibile:
+
+| keycode | tasto | assegnazione di fabbrica |
+|---|---|---|
+| 287 | voce | assistente OEM (pressione breve, non cedibile) |
+| 286 | stella vuota | rigenerazione — **riassegnabile dal sistema** |
+| 17 | stella piena | telecamera — **riassegnabile dal sistema** |
+
+Il broadcast **riferisce** la pressione, non la sostituisce: arriva anche mentre il tasto
+esegue la sua azione assegnata, quindi ascoltarlo non impedisce alla telecamera di aprirsi.
+
+Una pressione lunga si riconosce così: il `down` si ripete dopo circa un secondo con
+`long true`, e l'`up` arriva al rilascio.
+
+```
+16:44:05  keycode 287, down true,  long false
+16:44:06  keycode 287, down true,  long true     <- lunga
+16:44:08  keycode 287, down false, long false
+```
+
+### Smentito: i tasti media
+
+Un `MediaSession` attivo che dichiarava di essere in riproduzione, quindi con la pretesa più
+forte possibile sui tasti media, **non ha ricevuto nulla** dal volante in tutta la prova. La
+via `MEDIA_BUTTON` non esiste su questa vettura. Una funzione dell'app ci era stata costruita
+sopra per un mese, sulla deduzione — corretta in sé — che `MEDIA_BUTTON` sia uno dei pochi
+broadcast ancora consegnati a un receiver da manifest: ragionamento giusto applicato alla metà
+sbagliata del problema.
+
+### Aperto: il receiver da manifest
+
+Se il broadcast raggiunga un receiver **dichiarato nel manifest**, cioè se il volante possa
+svegliare l'app spenta, non è ancora stato misurato in auto. Sull'emulatore:
+
+- broadcast implicito (`am broadcast -a …`) → il receiver da manifest **non** scatta, come
+  prevedono le restrizioni di Android 8;
+- broadcast indirizzato (`-p com.tommasov.mg4assistant`) → **scatta**, ad app uccisa.
+
+Quindi la domanda è una sola e ben posta: il mittente SAIC indirizza il proprio broadcast?
+La prova è di trenta secondi — apri la finestra di osservazione, chiudi l'app, premi il
+volante, cerca una riga marcata `manifest`.
+
 ## Architettura che ne segue
 
 | pezzo | dove | note |

@@ -70,16 +70,25 @@
             android:name=".ProbeActivity"
             android:exported="false"
             android:screenOrientation="landscape" />
-        <!-- Declared, not registered in code: a receiver made by a running activity can
-             never be the thing that opens the app. MEDIA_BUTTON is one of the few broadcasts
-             that still start a stopped app on Android 8 and later — the car's own key
-             broadcast is implicit, and those are not delivered to manifest receivers at all.
-             Does nothing unless the setting is on. -->
+        <!-- Declared rather than registered in code, because a receiver made by a running
+             activity can never be the thing that opens the app.
+
+             This used to listen for MEDIA_BUTTON, on the reasoning that it is one of the few
+             broadcasts still delivered to a manifest receiver on Android 8 and later, whereas
+             the car's own key broadcast is implicit and implicit broadcasts are not. The car
+             settled it on 18 September 2026: an active MediaSession claiming media buttons
+             heard nothing at all from the wheel, while the SAIC broadcast arrived for every
+             press. A correct deduction about Android was applied to the wrong half of the
+             problem, and the feature never had a chance of working.
+
+             So it listens for the broadcast that demonstrably exists, and whether a manifest
+             receiver is allowed to hear it is now a measurement waiting to be taken rather
+             than an assumption. Does nothing unless the setting is on. -->
         <receiver
-            android:name=".WheelButtonReceiver"
+            android:name=".WheelBroadcastReceiver"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MEDIA_BUTTON" />
+                <action android:name="com.saic.keyevent.hardkey.report" />
             </intent-filter>
         </receiver>
     </application>

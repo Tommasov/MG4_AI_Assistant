@@ -38,7 +38,8 @@ public final class MediaKeyWatch {
     private static final int MAX_EVENTS = 12;
 
     public interface Listener {
-        void onEvent();
+        /** The event as a line, so whoever is listening can file it somewhere lasting. */
+        void onEvent(@NonNull String detail);
     }
 
     private final List<String> events = new ArrayList<>();
@@ -61,14 +62,14 @@ public final class MediaKeyWatch {
                 public boolean onMediaButtonEvent(@NonNull Intent intent) {
                     KeyEvent event = intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
                     if (event != null) {
-                        add(clock.format(new Date())
-                                + "  " + KeyEvent.keyCodeToString(event.getKeyCode())
+                        String detail = KeyEvent.keyCodeToString(event.getKeyCode())
                                 + " (" + event.getKeyCode() + ")"
                                 + ", action " + (event.getAction() == KeyEvent.ACTION_DOWN
                                         ? "down" : "up")
                                 + ", long " + event.isLongPress()
-                                + ", repeat " + event.getRepeatCount());
-                        listener.onEvent();
+                                + ", repeat " + event.getRepeatCount();
+                        add(clock.format(new Date()) + "  " + detail);
+                        listener.onEvent(detail);
                     }
                     // Not consumed: whatever else answers these keys should keep answering
                     // them. This is a probe, not a claim on the wheel.
@@ -83,8 +84,9 @@ public final class MediaKeyWatch {
             created.setActive(true);
             session = created;
         } catch (Exception e) {
-            add("could not claim media buttons: " + e.getClass().getSimpleName());
-            listener.onEvent();
+            String detail = "could not claim media buttons: " + e.getClass().getSimpleName();
+            add(clock.format(new Date()) + "  " + detail);
+            listener.onEvent(detail);
         }
     }
 

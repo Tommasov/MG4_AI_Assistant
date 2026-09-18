@@ -59,7 +59,6 @@
     <string name="status_spoken_by_car">Detto dall\'auto, nessun dato consumato</string>
     <string name="status_spoken_remote">Detto in %1$d ms</string>
     <string name="cd_back">Indietro</string>
-    <string name="section_hardkey">Tasto al volante</string>
 
     <string name="voice_remote_named">Voce: %1$s</string>
     <string name="voice_sample">Ecco come leggerò le risposte.</string>
@@ -84,7 +83,6 @@
     <string name="action_settings">Impostazioni</string>
 
     <string name="status_floor">Ambiente: %1$d, parlato sopra %2$d</string>
-    <string name="section_mediakey">Volante come tasto media</string>
 
     <string name="settings_wheel">Apre l\'app: %1$s</string>
     <string name="settings_wheel_explain">Solo la pressione lunga, e solo se quest\'auto manda il tasto voce come tasto media — la Diagnostica te lo dice. Tienilo spento finché non lo sai: una pressione breve di play o pausa appartiene a chi sta suonando musica.</string>
@@ -132,4 +130,10 @@
     <string name="key_row_title">Questo servizio</string>
     <string name="key_row_explain">%1$s\n\nVerifica chiede al servizio se la chiave funziona ancora. Rimuovi la dimentica qui; presso il servizio non viene annullato niente.</string>
     <string name="key_check">Verifica</string>
+    <string name="section_wheel">Volante</string>
+    <string name="section_storage">Dove verrebbe cercato un file con la chiave</string>
+    <string name="wheel_watch">Osserva il volante</string>
+    <string name="wheel_watch_explain">Per tre minuti questa schermata continua ad ascoltare anche quando non è in primo piano, così una pressione che apre l\'assistente di serie viene registrata lo stesso. Tutto quello che arriva viene scritto e resiste anche alla chiusura dell\'app.\n\nMentre è attiva, l\'app si prende i tasti media, quindi play e pausa potrebbero non arrivare al lettore musicale. Si spegne da sola dopo tre minuti.</string>
+    <string name="wheel_watch_start">Osserva per tre minuti</string>
+    <string name="wheel_watch_started">Sto osservando. Vai a premere il tasto al volante: breve, lungo, e due volte di seguito.</string>
 </resources>

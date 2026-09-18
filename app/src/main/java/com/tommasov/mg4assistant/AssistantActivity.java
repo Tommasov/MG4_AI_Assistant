@@ -480,7 +480,7 @@ public class AssistantActivity extends AppCompatActivity {
         applySettings();
         // A long press on the wheel closes the assistant: the way out that does not need the
         // screen, on a screen the whole app exists to avoid.
-        wheel.start(this, () -> {
+        wheel.start(this, detail -> {
             HardKeyWatch.Event last = wheel.last();
             if (last != null && last.keycode == HardKeyWatch.KEYCODE_VOICE_WHEEL
                     && last.longPress && last.down) {

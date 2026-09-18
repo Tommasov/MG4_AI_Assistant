@@ -58,6 +58,19 @@
             android:textSize="@dimen/button_text_size" />
 
         <Button
+            android:id="@+id/button_wheel_watch"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginEnd="@dimen/button_gap"
+            android:background="@drawable/native_button_selector"
+            android:paddingStart="@dimen/native_button_padding_h"
+            android:paddingEnd="@dimen/native_button_padding_h"
+            android:text="@string/wheel_watch"
+            android:textAllCaps="false"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/button_text_size" />
+
+        <Button
             android:id="@+id/button_mic"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/button_height"

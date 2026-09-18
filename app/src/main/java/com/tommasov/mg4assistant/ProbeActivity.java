@@ -22,14 +22,14 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.tommasov.mg4assistant.probe.AudioProbe;
+import com.tommasov.mg4assistant.keys.KeyFinder;
 import com.tommasov.mg4assistant.probe.ChatApi;
-import com.tommasov.mg4assistant.probe.HardKeyWatch;
-import com.tommasov.mg4assistant.probe.MediaKeyWatch;
 import com.tommasov.mg4assistant.probe.ProbeReport;
 import com.tommasov.mg4assistant.probe.SpeechProbe;
 import com.tommasov.mg4assistant.probe.TtsProbe;
 import com.tommasov.mg4assistant.probe.VehicleTts;
 import com.tommasov.mg4assistant.probe.VehicleProbe;
+import com.tommasov.mg4assistant.probe.WheelWatch;
 
 import java.util.List;
 import java.util.Locale;
@@ -63,8 +63,7 @@ public class ProbeActivity extends AppCompatActivity {
     private Button carVoiceButton;
     private Button sendButton;
 
-    private final HardKeyWatch hardKeys = new HardKeyWatch();
-    private final MediaKeyWatch mediaKeys = new MediaKeyWatch();
+    private WheelWatch wheel;
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     // One string per section, so re-running one test leaves the others' findings alone.
@@ -75,8 +74,8 @@ public class ProbeActivity extends AppCompatActivity {
     private String micSection = "";
     private String carTtsSection = "";
     private String apiSection = "";
-    private String hardKeySection = "";
-    private String mediaKeySection = "";
+    private String wheelSection = "";
+    private String storageSection = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,6 +90,7 @@ public class ProbeActivity extends AppCompatActivity {
 
         findViewById(R.id.button_back).setOnClickListener(v -> finish());
         findViewById(R.id.button_rerun).setOnClickListener(v -> runLocalProbes());
+        findViewById(R.id.button_wheel_watch).setOnClickListener(v -> toggleWheelWatch());
         micButton.setOnClickListener(v -> startMicTest());
         apiButton.setOnClickListener(v -> startApiTest());
         // Only the vehicle has the SAIC speech package; anywhere else the button would
@@ -116,23 +116,25 @@ public class ProbeActivity extends AppCompatActivity {
         super.onStart();
         // Only while the screen is up: a receiver left registered would have this
         // app woken by every button on the wheel, for nothing.
-        hardKeys.start(this, () -> {
-            hardKeySection = hardKeys.describe();
+        wheel = WheelWatch.shared(this);
+        wheel.setListener(() -> {
+            wheelSection = wheel.describe();
             render();
         });
-        mediaKeys.start(this, () -> {
-            mediaKeySection = mediaKeys.describe();
-            render();
-        });
-        hardKeySection = hardKeys.describe();
-        mediaKeySection = mediaKeys.describe();
+        // Picks up a window that is still running from before this screen was opened, or
+        // from before the process was last killed.
+        wheel.resumeIfOpen();
+        wheelSection = wheel.describe();
         render();
     }
 
     @Override
     protected void onStop() {
-        hardKeys.stop();
-        mediaKeys.stop();
+        // Deliberately does not stop the watch. The press worth recording is the one that
+        // brings the factory assistant to the front and puts this screen here; stopping now
+        // would switch off the instrument at the moment of the measurement. The window closes
+        // itself after three minutes instead.
+        wheel.setListener(null);
         super.onStop();
     }
 
@@ -152,16 +154,20 @@ public class ProbeActivity extends AppCompatActivity {
         vehicleSection = note(getString(R.string.working));
         sttSection = note(getString(R.string.working));
         ttsSection = note(getString(R.string.working));
+        storageSection = note(getString(R.string.working));
         render();
 
         new Thread(() -> {
             final String device = describeDevice();
             final String vehicle = describeVehicle();
             final String stt = describeSpeechRecognition();
+            // Touches the filesystem, so it belongs on this thread with the others.
+            final String storage = KeyFinder.describeSearchPath(ProbeActivity.this);
             mainHandler.post(() -> {
                 deviceSection = device;
                 vehicleSection = vehicle;
                 sttSection = stt;
+                storageSection = storage;
                 render();
             });
         }).start();
@@ -373,6 +379,31 @@ public class ProbeActivity extends AppCompatActivity {
         }).start();
     }
 
+    /**
+     * Opens or closes the three-minute wheel watch.
+     *
+     * <p>Says what it is about to do before doing it, because one half of this claims media
+     * buttons with an active session and that is the kind of thing that should not start
+     * behind somebody's back while their music is playing.
+     */
+    private void toggleWheelWatch() {
+        if (wheel.isOpen()) {
+            wheel.close();
+            return;
+        }
+        Dialogs.builder(this)
+                .setTitle(R.string.wheel_watch)
+                .setMessage(R.string.wheel_watch_explain)
+                .setPositiveButton(R.string.wheel_watch_start, (d, w) -> {
+                    wheel.open();
+                    wheelSection = wheel.describe();
+                    render();
+                    Dialogs.toast(this, R.string.wheel_watch_started);
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
     // ---------------------------------------------------------------- report
 
     private void render() {
@@ -383,8 +414,8 @@ public class ProbeActivity extends AppCompatActivity {
         section(sb, getString(R.string.section_tts), ttsSection);
         section(sb, getString(R.string.section_mic), micSection);
         section(sb, getString(R.string.section_car_tts), carTtsSection);
-        section(sb, getString(R.string.section_hardkey), hardKeySection);
-        section(sb, getString(R.string.section_mediakey), mediaKeySection);
+        section(sb, getString(R.string.section_wheel), wheelSection);
+        section(sb, getString(R.string.section_storage), storageSection);
         section(sb, getString(R.string.section_api), apiSection);
         report.setText(sb.toString());
     }
