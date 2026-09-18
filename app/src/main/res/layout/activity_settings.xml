@@ -156,10 +156,12 @@
                 style="@style/SectionHeader"
                 android:text="@string/settings_section_wheel" />
 
+            <!-- Wraps, like every other button on this screen. Stretched across the full
+                 width it read as a banner rather than as something to press, and the heading
+                 above it already says which button is meant. -->
             <Button
                 android:id="@+id/button_wheel"
-                style="@style/TonalButton"
-                android:layout_width="match_parent" />
+                style="@style/TonalButton" />
 
             <TextView
                 style="@style/Hint"

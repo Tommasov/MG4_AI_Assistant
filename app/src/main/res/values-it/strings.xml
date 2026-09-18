@@ -88,7 +88,7 @@
     <string name="status_floor">Ambiente: %1$d, parlato sopra %2$d</string>
     <string name="section_mediakey">Volante come tasto media</string>
 
-    <string name="settings_wheel">Il tasto al volante apre l\'app: %1$s</string>
+    <string name="settings_wheel">Apre l\'app: %1$s</string>
     <string name="settings_wheel_explain">Solo la pressione lunga, e solo se quest\'auto manda il tasto voce come tasto media — la Diagnostica te lo dice. Tienilo spento finché non lo sai: una pressione breve di play o pausa appartiene a chi sta suonando musica.</string>
     <string name="on">acceso</string>
     <string name="off">spento</string>
