@@ -71,6 +71,24 @@
 
             <TextView
                 style="@style/SectionHeader"
+                android:text="@string/settings_section_usage" />
+
+            <TextView
+                android:id="@+id/usage_summary"
+                style="@style/Notice" />
+
+
+
+            <Button
+                android:id="@+id/button_usage_reset"
+                style="@style/TonalButton"
+                android:layout_marginTop="@dimen/row_gap"
+                android:text="@string/settings_usage_reset" />
+
+            <View style="@style/Hairline" />
+
+            <TextView
+                style="@style/SectionHeader"
                 android:text="@string/settings_section_keys" />
 
             <TextView

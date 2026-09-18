@@ -57,9 +57,9 @@ public final class RemoteVoice {
     public static final String[] VOICES = {"alloy", "nova", "shimmer", "echo", "fable", "onyx"};
 
     /**
-     * mp3 rather than opus. Opus would be roughly a third smaller, and on a 1 GB SIM that is
-     * real money — but this head unit is a 2018 build and mp3 is the format nothing refuses.
-     * Worth revisiting once there is a car to test opus playback on.
+     * mp3 rather than opus. Opus would be roughly a third smaller, which matters on a car
+     * paying for its own mobile data — but this head unit is a 2018 build and mp3 is the
+     * format nothing refuses. Worth revisiting once there is a car to test opus playback on.
      */
     private static final String FORMAT = "mp3";
 
@@ -67,7 +67,7 @@ public final class RemoteVoice {
     private static final int READ_TIMEOUT_MS = 60000;
 
     public interface Callback {
-        void onSpeaking(long bytesReceived, long elapsedMs);
+        void onSpeaking(long bytesReceived, long elapsedMs, int characters);
 
         void onFinished();
 
@@ -146,7 +146,9 @@ public final class RemoteVoice {
                 }
                 final long received = bytes;
                 final long elapsed = System.currentTimeMillis() - started;
-                MAIN.post(() -> play(appContext, file, received, elapsed, callback));
+                final int characters = text.length();
+                MAIN.post(() -> play(appContext, file, received, elapsed, characters,
+                        callback));
             } catch (Exception e) {
                 String message = e.getMessage();
                 fail(callback, e.getClass().getSimpleName()
@@ -160,7 +162,7 @@ public final class RemoteVoice {
     }
 
     private void play(@NonNull Context appContext, @NonNull File file, long bytes,
-                      long elapsed, @NonNull Callback callback) {
+                      long elapsed, int characters, @NonNull Callback callback) {
         // The attributes still matter — they are what routes this to the assistant channel
         // rather than the media one — but the focus itself belongs to the caller now: it is
         // taken when the button is pressed and held until the answer ends, so that the radio
@@ -188,7 +190,7 @@ public final class RemoteVoice {
             });
             mp.prepare();
             mp.start();
-            callback.onSpeaking(bytes, elapsed);
+            callback.onSpeaking(bytes, elapsed, characters);
         } catch (Exception e) {
             releasePlayer(appContext);
             callback.onFailed("could not play the reply: " + e.getClass().getSimpleName());

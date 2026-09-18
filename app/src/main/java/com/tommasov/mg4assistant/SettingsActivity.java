@@ -35,6 +35,7 @@ import java.util.List;
 public class SettingsActivity extends AppCompatActivity {
 
     private Settings settings;
+    private Usage usage;
     private final RemoteVoice sampleVoice = new RemoteVoice();
     private final Handler main = new Handler(Looper.getMainLooper());
 
@@ -50,6 +51,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         settings = new Settings(this);
+        usage = new Usage(this);
 
         openAiField = findViewById(R.id.key_openai);
         xaiField = findViewById(R.id.key_xai);
@@ -59,6 +61,15 @@ public class SettingsActivity extends AppCompatActivity {
         wheelButton = findViewById(R.id.button_wheel);
 
         findViewById(R.id.button_back).setOnClickListener(v -> finish());
+        findViewById(R.id.button_usage_reset).setOnClickListener(v -> Dialogs.builder(this)
+                .setTitle(R.string.settings_usage_reset)
+                .setMessage(R.string.settings_usage_reset_explain)
+                .setPositiveButton(R.string.settings_usage_reset, (d, w) -> {
+                    usage.reset();
+                    show();
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show());
         findViewById(R.id.button_diagnostics).setOnClickListener(
                 v -> startActivity(new Intent(this, ProbeActivity.class)));
 
@@ -120,10 +131,34 @@ public class SettingsActivity extends AppCompatActivity {
         wheelButton.setText(getString(R.string.settings_wheel,
                 getString(settings.wheelStartsApp() ? R.string.on : R.string.off)));
 
+        showUsage();
+
         TextView notice = findViewById(R.id.speech_notice);
         notice.setText(settings.canHear()
                 ? getString(R.string.settings_speech_notice)
                 : getString(R.string.settings_speech_missing));
+    }
+
+    /**
+     * What has been spent since the counter was last started.
+     *
+     * <p>Quantities, not money. Every figure here is exact — the provider states its own token
+     * counts, the recorder knows how long it listened, the synthesiser counts what it was
+     * given — whereas a price is a number that goes stale without telling anyone.
+     *
+     * <p>Megabytes are not among them. They were, measured against a monthly allowance, until
+     * it was pointed out that plenty of these cars have no SIM at all: a meter for a limit
+     * that may not exist is worse than none.
+     */
+    private void showUsage() {
+        TextView summary = findViewById(R.id.usage_summary);
+        summary.setText(getString(R.string.settings_usage_summary,
+                usage.sinceLabel(),
+                usage.exchanges(),
+                usage.listenMillis() / 1000f / 60f,
+                (usage.tokensIn() + usage.tokensOut()) / 1000f,
+                usage.spokenChars() / 1000f));
+
     }
 
     /** Switches which service answers. Only offers one it has a key for. */
@@ -215,7 +250,8 @@ public class SettingsActivity extends AppCompatActivity {
                         sampleVoice.speak(this, settings.speechKey(),
                                 getString(R.string.voice_sample), new RemoteVoice.Callback() {
                                     @Override
-                                    public void onSpeaking(long bytes, long elapsed) {
+                                    public void onSpeaking(long bytes, long elapsed,
+                                                           int characters) {
                                     }
 
                                     @Override

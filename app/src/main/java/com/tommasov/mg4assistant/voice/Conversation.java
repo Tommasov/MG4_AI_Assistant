@@ -12,10 +12,10 @@ import java.util.Deque;
 /**
  * What has been said so far, kept deliberately short.
  *
- * <p>A chat API has no memory: the entire conversation is uploaded again on every turn. On a
- * car with a 1 GB monthly SIM that is not a detail — an hour of back and forth with an
- * unbounded history sends the early exchanges dozens of times over. So the history is capped,
- * and the cap is small.
+ * <p>A chat API has no memory: the entire conversation is uploaded again on every turn, and
+ * charged for again with it. An hour of back and forth with an unbounded history sends — and
+ * pays for — the early exchanges dozens of times over. So the history is capped, and the cap
+ * is small.
  *
  * <p>The system prompt shapes the answers for listening rather than reading. It asks for no
  * markdown and no preamble, and for the length the question deserves — an earlier version

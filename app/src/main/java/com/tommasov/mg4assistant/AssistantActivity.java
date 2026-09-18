@@ -3,7 +3,6 @@ package com.tommasov.mg4assistant;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -45,15 +44,18 @@ import java.util.List;
  * paper, so it is a switch.
  *
  * <p>Push to talk, never an open microphone. That is a data decision as much as a privacy
- * one: continuous listening would spend the car's monthly gigabyte in four days.
+ * one: an open microphone uploads continuously, and some of these cars are on a metered SIM
+ * where that would be the whole month's allowance inside a week.
  */
 public class AssistantActivity extends AppCompatActivity {
 
     private static final int REQUEST_RECORD_AUDIO = 1;
-    private static final String PREFS = "mg4assistant";
-    private static final String KEY_MODEL = "chat_model";
-    private static final String KEY_CAR_VOICE = "use_car_voice";
-    private static final String KEY_VOICE_NAME = "remote_voice";
+    /*
+     * No preference keys here. They used to live in this class as well as in Settings, which
+     * is how the front screen came to show one voice while the settings screen showed
+     * another: two readers of the same stored value, one of them caching it in a field that
+     * nothing refreshed. Everything now goes through Settings, and is re-read on resume.
+     */
     /** Transcription is told the language rather than left to guess it. */
     private static final String LANGUAGE = "it";
     /** Long enough for the speakers to fall quiet before the microphone opens again. */
@@ -70,6 +72,7 @@ public class AssistantActivity extends AppCompatActivity {
     private final VoiceRecorder recorder = new VoiceRecorder();
     private final AudioFocus audioFocus = new AudioFocus();
     private Settings settings;
+    private Usage usage;
     /**
      * The steering wheel, if this car lets an ordinary app hear it. Whether the broadcast
      * arrives at all is the open question; until it is answered this listens for nothing and
@@ -81,6 +84,7 @@ public class AssistantActivity extends AppCompatActivity {
     private final Handler main = new Handler(Looper.getMainLooper());
 
     private boolean busy;
+    /** Mirrors {@link Settings}; refreshed in onResume, never the source of truth. */
     private boolean useCarVoice;
     /**
      * How the last take ended. A take the speaker finished by pausing is a conversation; one
@@ -94,6 +98,7 @@ public class AssistantActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assistant);
         settings = new Settings(this);
+        usage = new Usage(this);
 
         talkButton = findViewById(R.id.button_talk);
         level = findViewById(R.id.level);
@@ -106,31 +111,21 @@ public class AssistantActivity extends AppCompatActivity {
 
         // The car's voice only exists on the car; anywhere else the switch would offer a
         // choice of one.
+        // The only voice decision worth making from the driver's seat: the car's own against
+        // the remote one, which differ in latency and accent enough to want switching mid-use.
+        // Which remote voice speaks is chosen in Settings, where the list carries a preview —
+        // a second hidden way to the same setting is how the two screens came to disagree.
         voiceButton = findViewById(R.id.button_voice);
         if (CarVoice.isAvailable(this)) {
-            useCarVoice = getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-                    .getBoolean(KEY_CAR_VOICE, false);
             voiceButton.setOnClickListener(v -> toggleVoice());
-            voiceButton.setOnLongClickListener(v -> cycleRemoteVoice());
-            showVoice();
         } else {
-            useCarVoice = false;
-            // Even without the car's voice there is a choice worth having: which of the
-            // remote voices speaks. Long press cycles them.
-            voiceButton.setOnLongClickListener(v -> cycleRemoteVoice());
-            showVoice();
+            voiceButton.setVisibility(View.GONE);
         }
-        remoteVoice.setVoice(getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-                .getString(KEY_VOICE_NAME, RemoteVoice.VOICES[0]));
         findViewById(R.id.button_settings).setOnClickListener(
                 v -> startActivity(new Intent(this, SettingsActivity.class)));
 
-        if (apiKey().isEmpty()) {
-            talkButton.setEnabled(false);
-            status.setText(R.string.error_no_key);
-        } else {
-            status.setText(R.string.status_ready);
-        }
+        status.setText(R.string.status_ready);
+        applySettings();
     }
 
     // ---------------------------------------------------------------- recording
@@ -242,7 +237,7 @@ public class AssistantActivity extends AppCompatActivity {
                 // The recording has served its purpose; nothing spoken in this car is kept.
                 recorder.deleteRecording();
                 status.setText(getString(R.string.status_cost,
-                        Math.round(millis / 1000f), Math.round(bytesSent / 1024f)));
+                        Math.round(millis / 1000f)));
                 if (text.isEmpty()) {
                     glow.setIntensity(0f);
                     audioFocus.release();
@@ -250,6 +245,9 @@ public class AssistantActivity extends AppCompatActivity {
                     status.setText(R.string.status_nothing_heard);
                     return;
                 }
+                // Counted once the transcription came back, so a take that failed or was
+                // never spoken into does not land in the figures.
+                usage.addExchange(millis);
                 heard.setText(getString(R.string.status_heard, text));
                 answer(text);
             }
@@ -293,6 +291,8 @@ public class AssistantActivity extends AppCompatActivity {
                     reply.setText(ChatApi.forDisplay(result.detail));
                     return;
                 }
+                long[] tokens = ChatApi.usageFrom(result);
+                usage.addTokens(tokens[0], tokens[1]);
                 String trimmed = text.trim();
                 Conversation.shared().addAssistant(trimmed);
                 reply.setText(trimmed);
@@ -367,10 +367,10 @@ public class AssistantActivity extends AppCompatActivity {
         }
         remoteVoice.speak(this, apiKey(), text, new RemoteVoice.Callback() {
             @Override
-            public void onSpeaking(long bytesReceived, long elapsedMs) {
+            public void onSpeaking(long bytesReceived, long elapsedMs, int characters) {
+                usage.addSpoken(characters);
                 glow.setIntensity(1f);
-                status.setText(getString(R.string.status_spoken_remote,
-                        Math.round(bytesReceived / 1024f), elapsedMs));
+                status.setText(getString(R.string.status_spoken_remote, elapsedMs));
             }
 
             @Override
@@ -426,8 +426,7 @@ public class AssistantActivity extends AppCompatActivity {
 
     private void toggleVoice() {
         useCarVoice = !useCarVoice;
-        getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-                .edit().putBoolean(KEY_CAR_VOICE, useCarVoice).apply();
+        settings.setUseCarVoice(useCarVoice);
         remoteVoice.stop();
         carVoice.stop();
         showVoice();
@@ -438,39 +437,26 @@ public class AssistantActivity extends AppCompatActivity {
                 : getString(R.string.status_ready));
     }
 
+    /** Pulls the stored choices back in and redraws whatever shows them. */
+    private void applySettings() {
+        useCarVoice = settings.useCarVoice() && CarVoice.isAvailable(this);
+        remoteVoice.setVoice(settings.voice());
+        showVoice();
+        if (!settings.canHear()) {
+            talkButton.setEnabled(false);
+            status.setText(R.string.error_no_key);
+        } else if (!talkButton.isEnabled() && !busy) {
+            talkButton.setEnabled(true);
+            status.setText(R.string.status_ready);
+        }
+    }
+
     private void showVoice() {
         voiceButton.setText(useCarVoice
                 ? getString(R.string.voice_car)
                 : getString(R.string.voice_remote_named, remoteVoice.voice()));
     }
 
-    /**
-     * Steps to the next remote voice and speaks a sample in it, so the choice is made by ear.
-     *
-     * <p>All of OpenAI's voices are English-trained and none of them speaks Italian like a
-     * native. They are wrong in different ways, though, and which wrongness is bearable is
-     * not something anyone can decide from a list of names.
-     */
-    private boolean cycleRemoteVoice() {
-        if (useCarVoice) {
-            return false;
-        }
-        String[] all = RemoteVoice.VOICES;
-        int next = 0;
-        for (int i = 0; i < all.length; i++) {
-            if (all[i].equals(remoteVoice.voice())) {
-                next = (i + 1) % all.length;
-                break;
-            }
-        }
-        remoteVoice.setVoice(all[next]);
-        getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-                .edit().putString(KEY_VOICE_NAME, all[next]).apply();
-        showVoice();
-        audioFocus.acquire(this);
-        speak(getString(R.string.voice_sample));
-        return true;
-    }
 
     // ---------------------------------------------------------------- plumbing
 
@@ -489,6 +475,9 @@ public class AssistantActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        // Settings may have changed while this screen sat in the background. Re-reading here
+        // is what keeps the two screens from disagreeing.
+        applySettings();
         // A long press on the wheel closes the assistant: the way out that does not need the
         // screen, on a screen the whole app exists to avoid.
         wheel.start(this, () -> {

@@ -14,10 +14,11 @@ import java.io.File;
 /**
  * Records a spoken question, compressed, with a hard limit on how long it may run.
  *
- * <p>Both of those are data decisions before they are audio ones. The car has a 1 GB monthly
- * SIM and every second recorded is a second uploaded: raw 16 kHz PCM costs about 31 KB per
- * second, AAC at 24 kbps costs 3. Over a month of use that is the difference between the
- * assistant being a rounding error on the bill and being the bill.
+ * <p>Both of those are data decisions before they are audio ones. Every second recorded is a
+ * second uploaded, and speech is billed by the minute at the far end: raw 16 kHz PCM costs
+ * about 31 KB per second to send, AAC at 24 kbps costs 3. On a car whose mobile data is
+ * metered — not all of them are — that ratio is the difference between the assistant being a
+ * rounding error on the plan and being the plan.
  *
  * <p>Recording starts when something asks it to and stops when the speaker does: a pause of
  * about a second after speech ends the take. That is what lets a whole exchange happen without

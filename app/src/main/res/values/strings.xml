@@ -51,7 +51,7 @@
     <string name="status_heard">You said: %1$s</string>
     <string name="status_limit">Stopped at the 30 second limit</string>
     <string name="status_nothing_heard">Nothing was said</string>
-    <string name="status_cost">%1$d s, %2$d KB sent</string>
+    <string name="status_cost">Listened for %1$d s</string>
     <string name="error_no_key">No API key in this build</string>
     <string name="error_mic_denied">Without the microphone permission there is nothing to record</string>
     <string name="error_no_model">Could not work out which model to use: %1$s</string>
@@ -60,7 +60,7 @@
     <string name="voice_car">Voice: car</string>
     <string name="voice_car_warning">The car has no Italian voice: it will read with an English accent</string>
     <string name="status_spoken_by_car">Spoken by the car, no data used</string>
-    <string name="status_spoken_remote">%1$d KB received in %2$d ms</string>
+    <string name="status_spoken_remote">Spoken in %1$d ms</string>
     <string name="cd_back">Back</string>
     <string name="section_hardkey">Steering wheel key</string>
 
@@ -100,4 +100,9 @@
     <string name="settings_section_keys">Keys</string>
     <string name="settings_section_conversation">Conversation</string>
     <string name="settings_section_wheel">Steering wheel</string>
+
+    <string name="settings_section_usage">What it has used</string>
+    <string name="settings_usage_summary">Since %1$s: %2$d questions, %3$.1f minutes listened, %4$.1fk tokens, %5$.1fk characters spoken.</string>
+    <string name="settings_usage_reset">Start a new count</string>
+    <string name="settings_usage_reset_explain">The figures go back to zero and start again from today. Nothing is sent anywhere and nothing about your account changes — this is only what this app has counted.</string>
 </resources>

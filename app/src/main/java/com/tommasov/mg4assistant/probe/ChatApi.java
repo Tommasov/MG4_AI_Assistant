@@ -226,9 +226,9 @@ public final class ChatApi {
     /**
      * A conversation rather than a single question.
      *
-     * <p>Worth remembering what this costs on a 1 GB SIM: the whole array is re-sent on every
-     * turn, so an unbounded history grows the request without bound. Whoever builds the array
-     * is responsible for keeping it short — see Conversation.
+     * <p>Worth remembering what this costs: the whole array is re-sent on every turn, so an
+     * unbounded history grows both the bill and the request without bound. Whoever builds the
+     * array is responsible for keeping it short — see Conversation.
      */
     @NonNull
     public static Result chat(@NonNull String key, @NonNull String model,
@@ -242,6 +242,29 @@ public final class ChatApi {
             return new Result(false, -1, "could not build the request",
                     e.getClass().getSimpleName() + ": " + e.getMessage(), 0);
         }
+    }
+
+    /**
+     * Tokens in and out, as the provider itself reported them in the response body.
+     *
+     * <p>Taken from the answer rather than counted here: token counting depends on the
+     * tokeniser of the model that happened to answer, and an estimate that drifts is worse
+     * than no figure at all when the point is to know what was spent.
+     *
+     * @return {in, out}, or {0, 0} if the body carried no usage block.
+     */
+    @NonNull
+    public static long[] usageFrom(@NonNull Result result) {
+        try {
+            JSONObject usage = new JSONObject(result.detail).optJSONObject("usage");
+            if (usage != null) {
+                return new long[]{usage.optLong("prompt_tokens", 0),
+                        usage.optLong("completion_tokens", 0)};
+            }
+        } catch (Exception e) {
+            // No usage block is not an error: the figures simply do not move.
+        }
+        return new long[]{0, 0};
     }
 
     /** The assistant's reply, pulled out of a successful {@link #chat} body. */

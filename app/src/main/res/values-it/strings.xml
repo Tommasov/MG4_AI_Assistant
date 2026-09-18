@@ -48,7 +48,7 @@
     <string name="status_heard">Hai detto: %1$s</string>
     <string name="status_limit">Fermato al limite di 30 secondi</string>
     <string name="status_nothing_heard">Non ho sentito niente</string>
-    <string name="status_cost">%1$d s, %2$d KB inviati</string>
+    <string name="status_cost">Ascoltato per %1$d s</string>
     <string name="error_no_key">Questa build non ha una chiave API</string>
     <string name="error_mic_denied">Senza il permesso del microfono non c\'è niente da registrare</string>
     <string name="error_no_model">Non sono riuscito a capire che modello usare: %1$s</string>
@@ -57,7 +57,7 @@
     <string name="voice_car">Voce: auto</string>
     <string name="voice_car_warning">L\'auto non ha una voce italiana: leggerà con accento inglese</string>
     <string name="status_spoken_by_car">Detto dall\'auto, nessun dato consumato</string>
-    <string name="status_spoken_remote">%1$d KB ricevuti in %2$d ms</string>
+    <string name="status_spoken_remote">Detto in %1$d ms</string>
     <string name="cd_back">Indietro</string>
     <string name="section_hardkey">Tasto al volante</string>
 
@@ -97,4 +97,9 @@
     <string name="settings_section_keys">Chiavi</string>
     <string name="settings_section_conversation">Conversazione</string>
     <string name="settings_section_wheel">Volante</string>
+
+    <string name="settings_section_usage">Quanto ha consumato</string>
+    <string name="settings_usage_summary">Dal %1$s: %2$d domande, %3$.1f minuti ascoltati, %4$.1fk token, %5$.1fk caratteri pronunciati.</string>
+    <string name="settings_usage_reset">Ricomincia il conteggio</string>
+    <string name="settings_usage_reset_explain">I numeri tornano a zero e ripartono da oggi. Non viene inviato niente e non cambia niente sul tuo account: questo è solo quello che ha contato l\'app.</string>
 </resources>
