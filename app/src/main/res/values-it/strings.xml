@@ -40,7 +40,7 @@
     <string name="assistant_title">Assistente AI</string>
     <string name="action_diagnostics">Diagnostica</string>
     <string name="talk_idle">Tocca per parlare</string>
-    <string name="talk_recording">Ti ascolto — tocca per fermare</string>
+    <string name="talk_recording">Parla — si ferma da solo</string>
     <string name="talk_busy">Un momento…</string>
     <string name="status_transcribing">Trascrivo…</string>
     <string name="status_thinking">Ci penso…</string>
@@ -63,4 +63,7 @@
 
     <string name="voice_remote_named">Voce: %1$s</string>
     <string name="voice_sample">Ecco come leggerò le risposte.</string>
+
+    <string name="status_nothing_heard_peak">Non ho sentito niente (picco %1$d)</string>
+    <string name="talk_listening_hint">Parla — si ferma da solo quando finisci</string>
 </resources>

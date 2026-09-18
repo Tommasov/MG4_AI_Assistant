@@ -55,6 +55,8 @@ public class AssistantActivity extends AppCompatActivity {
     private static final String KEY_VOICE_NAME = "remote_voice";
     /** Transcription is told the language rather than left to guess it. */
     private static final String LANGUAGE = "it";
+    /** Long enough for the speakers to fall quiet before the microphone opens again. */
+    private static final long FOLLOW_UP_DELAY_MS = 600;
 
     private Button talkButton;
     private Button voiceButton;
@@ -72,6 +74,12 @@ public class AssistantActivity extends AppCompatActivity {
 
     private boolean busy;
     private boolean useCarVoice;
+    /**
+     * How the last take ended. A take the speaker finished by pausing is a conversation; one
+     * stopped by a finger or by the ceiling is not, and should not reopen the microphone by
+     * itself.
+     */
+    @NonNull private VoiceRecorder.Stop lastStop = VoiceRecorder.Stop.BY_HAND;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -160,9 +168,21 @@ public class AssistantActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onStopped(@NonNull File audio, int millis, boolean hitLimit) {
+            public void onStopped(@NonNull File audio, int millis,
+                                  @NonNull VoiceRecorder.Stop reason, int peak) {
                 level.setVisibility(View.INVISIBLE);
-                if (hitLimit) {
+                lastStop = reason;
+                if (reason == VoiceRecorder.Stop.NOTHING_SAID) {
+                    // Nothing was ever said into it, so there is nothing worth a round trip.
+                    // Common when the follow-up microphone opens and the conversation is over.
+                    recorder.deleteRecording();
+                    glow.setIntensity(0f);
+                    audioFocus.release();
+                    setBusy(false);
+                    status.setText(getString(R.string.status_nothing_heard_peak, peak));
+                    return;
+                }
+                if (reason == VoiceRecorder.Stop.LIMIT) {
                     status.setText(R.string.status_limit);
                 }
                 transcribe(audio, millis);
@@ -314,7 +334,8 @@ public class AssistantActivity extends AppCompatActivity {
                     main.postDelayed(() -> {
                         glow.setIntensity(0f);
                         audioFocus.release();
-                    }, estimateSpeechMillis(text));
+                        listenAgain();
+                    }, estimateSpeechMillis(text) + FOLLOW_UP_DELAY_MS);
                 }
 
                 @Override
@@ -337,8 +358,13 @@ public class AssistantActivity extends AppCompatActivity {
             @Override
             public void onFinished() {
                 glow.setIntensity(0f);
-                audioFocus.release();
                 status.setText(R.string.status_ready);
+                // A breath before listening again, or the tail of the assistant's own voice
+                // lands in the next recording.
+                main.postDelayed(() -> {
+                    audioFocus.release();
+                    listenAgain();
+                }, FOLLOW_UP_DELAY_MS);
             }
 
             @Override
@@ -348,6 +374,27 @@ public class AssistantActivity extends AppCompatActivity {
                 status.setText(reason);
             }
         });
+    }
+
+    /**
+     * Reopens the microphone after an answer, so a conversation costs one press and not one
+     * per question.
+     *
+     * <p>Only after a take the speaker ended themselves. If the last one was stopped by hand
+     * or ran into the thirty second ceiling, the exchange was not a conversation and listening
+     * again would be the app deciding on its own to record.
+     *
+     * <p>Nothing said within the lead-in closes it quietly, so the loop ends by falling silent
+     * rather than by being told to.
+     */
+    private void listenAgain() {
+        if (isFinishing() || busy || recorder.isRecording()) {
+            return;
+        }
+        if (lastStop != VoiceRecorder.Stop.SILENCE) {
+            return;
+        }
+        startRecording();
     }
 
     /**

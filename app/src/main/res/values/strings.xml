@@ -43,7 +43,7 @@
     <string name="assistant_title">AI Assistant</string>
     <string name="action_diagnostics">Diagnostics</string>
     <string name="talk_idle">Tap to speak</string>
-    <string name="talk_recording">Listening — tap to stop</string>
+    <string name="talk_recording">Speak — it stops when you do</string>
     <string name="talk_busy">Working…</string>
     <string name="status_transcribing">Transcribing…</string>
     <string name="status_thinking">Thinking…</string>
@@ -66,4 +66,7 @@
 
     <string name="voice_remote_named">Voice: %1$s</string>
     <string name="voice_sample">This is how I will read the answers.</string>
+
+    <string name="status_nothing_heard_peak">Nothing was said (peak %1$d)</string>
+    <string name="talk_listening_hint">Speak — it stops when you do</string>
 </resources>
