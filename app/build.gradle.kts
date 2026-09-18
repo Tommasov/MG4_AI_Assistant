@@ -31,8 +31,8 @@ android {
         applicationId = "com.tommasov.mg4assistant"
         minSdk = 28
         targetSdk = 34
-        versionCode = 1
-        versionName = "0.1-probe"
+        versionCode = 2
+        versionName = "0.2"
 
         // The author's report endpoint. Write-only by design: it accepts a report and can do
         // nothing else — no reading back, no listing, no deleting, with any key. That is what
