@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Sizes follow MG4 Simple Launcher's vocabulary for this head unit (1920x720, read at
+     about a metre): title 30, body 28, button 26, reference material 26 and below. -->
+<resources>
+    <dimen name="screen_padding">24dp</dimen>
+    <dimen name="title_size">30sp</dimen>
+    <dimen name="button_text_size">26sp</dimen>
+    <dimen name="button_height">72dp</dimen>
+    <dimen name="button_gap">16dp</dimen>
+    <dimen name="native_button_radius">10dp</dimen>
+    <dimen name="native_button_padding_h">24dp</dimen>
+    <dimen name="native_button_padding_v">12dp</dimen>
+
+    <!-- The report itself. A tier below body text on purpose: it is a wall of findings to be
+         read while parked, not something to glance at, and at 28sp far less of it fits on
+         one screen than there is to say. -->
+    <dimen name="report_text_size">24sp</dimen>
+    <dimen name="report_gap">20dp</dimen>
+
+    <!-- The one control on the assistant screen. Deliberately the size of a target you find
+         without aiming, from a metre back. -->
+    <dimen name="talk_button_height">140dp</dimen>
+    <dimen name="talk_text_size">34sp</dimen>
+    <dimen name="level_height">8dp</dimen>
+    <dimen name="status_text_size">22sp</dimen>
+    <!-- The answer is the thing being read; everything else on screen is scaffolding. -->
+    <dimen name="reply_text_size">30sp</dimen>
+</resources>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Default (English); Italian in values-it. Only two languages, unlike the launcher and the
+     browser: this build is a measuring instrument, not something anyone else installs.
+     An apostrophe in an Android string resource must be escaped with a backslash. -->
+<resources>
+    <string name="app_name">AI Assistant</string>
+    <string name="probe_title">What this head unit can do</string>
+
+    <string name="action_rerun">Run again</string>
+    <string name="action_mic">Test microphone</string>
+    <string name="action_api">Test API</string>
+
+    <!-- Section headings in the report -->
+    <string name="section_device">Device</string>
+    <string name="section_mic">Microphone</string>
+    <string name="section_stt">Speech recognition (speech to text)</string>
+    <string name="section_tts">Speech synthesis (text to speech)</string>
+    <string name="section_api">Chat API</string>
+
+    <string name="yes">yes</string>
+    <string name="no">no</string>
+    <string name="working">working…</string>
+    <string name="not_run_yet">not run yet — use the button above</string>
+
+    <string name="mic_permission_rationale">Recording permission is needed to find out whether this car lets an ordinary app read its microphone at all. Nothing is stored or sent anywhere: the test measures the loudness of two seconds of audio and throws it away.</string>
+    <string name="mic_permission_denied">Permission refused, so the microphone cannot be tested. Grant it in Android\'s app settings and run the test again.</string>
+
+    <string name="api_key_hint">API key — paste it here (sk-… for OpenAI, xai-… for xAI)</string>
+    <string name="api_no_key">no key. Paste one in the field above.</string>
+
+    <string name="action_send">Send report</string>
+    <string name="sending">Sending…</string>
+    <string name="send_title">Send the report</string>
+    <string name="send_explain">The report goes to the app author. It lists what this head unit has installed — including the names of voice-related packages — along with the build and the model of the unit. It never carries the API key. Nothing is sent until you tap Send.</string>
+    <string name="send_note_hint">In the car? Engine running? (optional)</string>
+    <string name="sent">Report sent as %1$s</string>
+    <string name="send_failed">The report could not be sent</string>
+    <string name="nothing_to_send">Nothing to send yet</string>
+
+    <string name="action_car_voice">Test car voice</string>
+    <string name="section_car_tts">Car speech synthesis (SAIC)</string>
+
+    <string name="assistant_title">AI Assistant</string>
+    <string name="action_diagnostics">Diagnostics</string>
+    <string name="talk_idle">Tap to speak</string>
+    <string name="talk_recording">Listening — tap to stop</string>
+    <string name="talk_busy">Working…</string>
+    <string name="status_transcribing">Transcribing…</string>
+    <string name="status_thinking">Thinking…</string>
+    <string name="status_ready">Ready</string>
+    <string name="status_heard">You said: %1$s</string>
+    <string name="status_limit">Stopped at the 30 second limit</string>
+    <string name="status_nothing_heard">Nothing was said</string>
+    <string name="status_cost">%1$d s, %2$d KB sent</string>
+    <string name="error_no_key">No API key in this build</string>
+    <string name="error_mic_denied">Without the microphone permission there is nothing to record</string>
+    <string name="error_no_model">Could not work out which model to use: %1$s</string>
+
+    <string name="voice_remote">Voice: OpenAI</string>
+    <string name="voice_car">Voice: car</string>
+    <string name="voice_car_warning">The car has no Italian voice: it will read with an English accent</string>
+    <string name="status_spoken_by_car">Spoken by the car, no data used</string>
+    <string name="status_spoken_remote">%1$d KB received in %2$d ms</string>
+    <string name="cd_back">Back</string>
+    <string name="section_hardkey">Steering wheel key</string>
+
+    <string name="voice_remote_named">Voice: %1$s</string>
+    <string name="voice_sample">This is how I will read the answers.</string>
+</resources>

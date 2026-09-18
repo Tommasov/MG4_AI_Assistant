@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- L'apostrofo in una risorsa Android va sempre preceduto da backslash. -->
+<resources>
+    <string name="app_name">Assistente AI</string>
+    <string name="probe_title">Cosa sa fare questa testata</string>
+
+    <string name="action_rerun">Riesegui</string>
+    <string name="action_mic">Prova microfono</string>
+    <string name="action_api">Prova API</string>
+
+    <string name="section_device">Dispositivo</string>
+    <string name="section_mic">Microfono</string>
+    <string name="section_stt">Riconoscimento vocale (voce → testo)</string>
+    <string name="section_tts">Sintesi vocale (testo → voce)</string>
+    <string name="section_api">API chat</string>
+
+    <string name="yes">sì</string>
+    <string name="no">no</string>
+    <string name="working">in corso…</string>
+    <string name="not_run_yet">non ancora eseguita — usa il pulsante qui sopra</string>
+
+    <string name="mic_permission_rationale">Il permesso di registrazione serve a scoprire se quest\'auto lascia leggere il microfono a un\'app qualunque. Niente viene salvato né inviato: la prova misura il volume di due secondi di audio e li butta via.</string>
+    <string name="mic_permission_denied">Permesso negato, quindi il microfono non si può provare. Concedilo nelle impostazioni dell\'app e riesegui la prova.</string>
+
+    <string name="api_key_hint">Chiave API — incollala qui (sk-… per OpenAI, xai-… per xAI)</string>
+    <string name="api_no_key">nessuna chiave. Incollane una nel campo qui sopra.</string>
+
+    <string name="action_send">Invia referto</string>
+    <string name="sending">Invio…</string>
+    <string name="send_title">Invia il referto</string>
+    <string name="send_explain">Il referto va all\'autore dell\'app. Elenca che cosa ha installato questa testata — compresi i nomi dei pacchetti legati alla voce — insieme alla build e al modello dell\'unità. La chiave API non parte mai. Finché non premi Invia non parte nulla.</string>
+    <string name="send_note_hint">In auto? Motore acceso? (facoltativo)</string>
+    <string name="sent">Referto inviato come %1$s</string>
+    <string name="send_failed">Non sono riuscito a inviare il referto</string>
+    <string name="nothing_to_send">Non c\'è ancora niente da inviare</string>
+
+    <string name="action_car_voice">Prova voce auto</string>
+    <string name="section_car_tts">Sintesi vocale dell\'auto (SAIC)</string>
+
+    <string name="assistant_title">Assistente AI</string>
+    <string name="action_diagnostics">Diagnostica</string>
+    <string name="talk_idle">Tocca per parlare</string>
+    <string name="talk_recording">Ti ascolto — tocca per fermare</string>
+    <string name="talk_busy">Un momento…</string>
+    <string name="status_transcribing">Trascrivo…</string>
+    <string name="status_thinking">Ci penso…</string>
+    <string name="status_ready">Pronto</string>
+    <string name="status_heard">Hai detto: %1$s</string>
+    <string name="status_limit">Fermato al limite di 30 secondi</string>
+    <string name="status_nothing_heard">Non ho sentito niente</string>
+    <string name="status_cost">%1$d s, %2$d KB inviati</string>
+    <string name="error_no_key">Questa build non ha una chiave API</string>
+    <string name="error_mic_denied">Senza il permesso del microfono non c\'è niente da registrare</string>
+    <string name="error_no_model">Non sono riuscito a capire che modello usare: %1$s</string>
+
+    <string name="voice_remote">Voce: OpenAI</string>
+    <string name="voice_car">Voce: auto</string>
+    <string name="voice_car_warning">L\'auto non ha una voce italiana: leggerà con accento inglese</string>
+    <string name="status_spoken_by_car">Detto dall\'auto, nessun dato consumato</string>
+    <string name="status_spoken_remote">%1$d KB ricevuti in %2$d ms</string>
+    <string name="cd_back">Indietro</string>
+    <string name="section_hardkey">Tasto al volante</string>
+
+    <string name="voice_remote_named">Voce: %1$s</string>
+    <string name="voice_sample">Ecco come leggerò le risposte.</string>
+</resources>

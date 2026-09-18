@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One screen, one action. The button is the size it is because it has to be found without
+     being looked for: this is the only control, and whoever presses it is sitting a metre
+     back with other things to attend to. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/chrome_background">
+
+    <!-- Behind everything, and asking for frames only while there is something to show. -->
+    <com.tommasov.mg4assistant.ui.AmbientGlowView
+        android:id="@+id/glow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/screen_padding">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/assistant_title"
+                android:textColor="@color/text_primary"
+                android:textSize="@dimen/title_size" />
+
+            <!-- Which voice says the answer. A switch and not a setting buried somewhere: the
+                 two differ in latency, in data and in accent, and the only way to weigh that
+                 is to hear both from the driver's seat. Hidden where the car's voice is
+                 absent. -->
+            <Button
+                android:id="@+id/button_voice"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginEnd="@dimen/button_gap"
+                android:background="@drawable/native_button_selector"
+                android:paddingStart="@dimen/native_button_padding_h"
+                android:paddingEnd="@dimen/native_button_padding_h"
+                android:textAllCaps="false"
+                android:textColor="@color/text_primary"
+                android:textSize="@dimen/button_text_size" />
+
+            <!-- The measuring instrument is still here, just no longer the front door. -->
+            <Button
+                android:id="@+id/button_diagnostics"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/button_height"
+                android:background="@drawable/native_button_selector"
+                android:paddingStart="@dimen/native_button_padding_h"
+                android:paddingEnd="@dimen/native_button_padding_h"
+                android:text="@string/action_diagnostics"
+                android:textAllCaps="false"
+                android:textColor="@color/text_primary"
+                android:textSize="@dimen/button_text_size" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/button_talk"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/talk_button_height"
+            android:layout_marginTop="@dimen/report_gap"
+            android:background="@drawable/native_button_selector"
+            android:text="@string/talk_idle"
+            android:textAllCaps="false"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/talk_text_size" />
+
+        <!-- Shows that the microphone is live and hearing something. Without it, a recording
+             that captures nothing looks exactly like one that is working. -->
+        <ProgressBar
+            android:id="@+id/level"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/level_height"
+            android:layout_marginTop="@dimen/button_gap"
+            android:indeterminate="false"
+            android:max="100"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/button_gap"
+            android:textColor="@color/text_secondary"
+            android:textSize="@dimen/status_text_size" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="@dimen/report_gap"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/heard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="@dimen/status_text_size" />
+
+                <!-- The answer, at the size of something meant to be read from the seat. It is
+                     spoken too, but it stays on screen: a sentence heard once in a moving car
+                     is a sentence half heard. -->
+                <TextView
+                    android:id="@+id/reply"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/button_gap"
+                    android:paddingBottom="@dimen/report_gap"
+                    android:textColor="@color/text_primary"
+                    android:textSize="@dimen/reply_text_size" />
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</FrameLayout>

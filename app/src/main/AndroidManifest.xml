@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <!-- Declared rather than required: a head unit that turns out not to expose a microphone
+         to ordinary apps is exactly the finding this build exists to make, and requiring the
+         feature would stop it installing before it could report that. -->
+    <uses-feature
+        android:name="android.hardware.microphone"
+        android:required="false" />
+
+    <!-- The probe enumerates what is on board looking for the factory voice assistant and
+         its speech engines. On API 28 nothing filters that list, but the declaration keeps
+         the finding honest if this is ever run on a newer system. -->
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
+
+    <!-- Package visibility (API 30+). Asking the system which speech-recognition and
+         text-to-speech services are installed is a query about other packages, and without
+         these the answer comes back empty on a modern targetSdk — which would look exactly
+         like "this car has none", the very thing being measured. The head unit is API 28 and
+         does not filter, but the probe must not lie when run anywhere newer. -->
+    <queries>
+        <intent>
+            <action android:name="android.speech.RecognitionService" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.TTS_SERVICE" />
+        </intent>
+    </queries>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MG4Assistant">
+
+        <!-- The assistant is the front door now. -->
+        <activity
+            android:name=".AssistantActivity"
+            android:exported="true"
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- The measuring instrument, kept but no longer launched directly: what it reports
+             stays useful every time the firmware or the car changes under us. -->
+        <activity
+            android:name=".ProbeActivity"
+            android:exported="false"
+            android:screenOrientation="landscape" />
+    </application>
+
+</manifest>

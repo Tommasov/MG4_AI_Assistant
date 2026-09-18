@@ -1,0 +1,16 @@
+[versions]
+agp = "8.6.0"
+appcompat = "1.7.0"
+# Not a dependency of ours, only a floor. See the constraints in app/build.gradle.kts.
+kotlin = "1.8.22"
+
+[libraries]
+# AppCompat only. The probe talks to the network with HttpsURLConnection and to the
+# microphone with AudioRecord, both of which are in the platform; an HTTP client library
+# would be weight for one request, and this app has to run on a 2018 head unit.
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+kotlin-stdlib-jdk7 = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk7", version.ref = "kotlin" }
+kotlin-stdlib-jdk8 = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version.ref = "kotlin" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }

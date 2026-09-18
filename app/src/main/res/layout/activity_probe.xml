@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One screen: a row of actions, then the findings. Nothing to navigate — this build exists
+     to answer four questions about the car, and all four answers fit here. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/chrome_background"
+    android:padding="@dimen/screen_padding">
+
+    <!-- Header laid out like the launcher's drawer: the back target first, then the title.
+         Android's own back gesture still works; this is the one people actually reach for on
+         a screen they opened from somewhere else. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/button_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/button_gap"
+            android:background="@drawable/native_button_selector"
+            android:clickable="true"
+            android:contentDescription="@string/cd_back"
+            android:focusable="true"
+            android:padding="@dimen/native_button_padding_v"
+            android:src="@drawable/ic_back" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/probe_title"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/title_size" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/report_gap"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_rerun"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginEnd="@dimen/button_gap"
+            android:background="@drawable/native_button_selector"
+            android:paddingStart="@dimen/native_button_padding_h"
+            android:paddingEnd="@dimen/native_button_padding_h"
+            android:text="@string/action_rerun"
+            android:textAllCaps="false"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/button_text_size" />
+
+        <Button
+            android:id="@+id/button_mic"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginEnd="@dimen/button_gap"
+            android:background="@drawable/native_button_selector"
+            android:paddingStart="@dimen/native_button_padding_h"
+            android:paddingEnd="@dimen/native_button_padding_h"
+            android:text="@string/action_mic"
+            android:textAllCaps="false"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/button_text_size" />
+
+        <Button
+            android:id="@+id/button_api"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginEnd="@dimen/button_gap"
+            android:background="@drawable/native_button_selector"
+            android:paddingStart="@dimen/native_button_padding_h"
+            android:paddingEnd="@dimen/native_button_padding_h"
+            android:text="@string/action_api"
+            android:textAllCaps="false"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/button_text_size" />
+
+        <!-- Speaks aloud, so it is a button and not part of the automatic sweep: a probe that
+             starts talking the moment it opens would be startling in a parked car. Hidden
+             where the SAIC package is absent, which is every device but the vehicle. -->
+        <Button
+            android:id="@+id/button_car_voice"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginEnd="@dimen/button_gap"
+            android:background="@drawable/native_button_selector"
+            android:paddingStart="@dimen/native_button_padding_h"
+            android:paddingEnd="@dimen/native_button_padding_h"
+            android:text="@string/action_car_voice"
+            android:textAllCaps="false"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/button_text_size" />
+
+        <!-- The car has no adb, no browser and nothing that accepts a share, and there is no
+             text field on board to paste a clipboard into. Uploading is the only way these
+             findings leave the vehicle other than by being photographed off the screen.
+             Hidden when the build carries no write key. -->
+        <Button
+            android:id="@+id/button_send"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/button_height"
+            android:background="@drawable/native_button_selector"
+            android:paddingStart="@dimen/native_button_padding_h"
+            android:paddingEnd="@dimen/native_button_padding_h"
+            android:text="@string/action_send"
+            android:textAllCaps="false"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/button_text_size" />
+    </LinearLayout>
+
+    <!-- Pasted, not typed, and not compiled in: one build then works with any key, and no
+         secret travels inside an APK that may end up in the download catalogue. -->
+    <EditText
+        android:id="@+id/api_key"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="@dimen/report_gap"
+        android:background="@drawable/native_button_selector"
+        android:hint="@string/api_key_hint"
+        android:importantForAutofill="no"
+        android:inputType="textVisiblePassword"
+        android:maxLines="1"
+        android:paddingStart="@dimen/native_button_padding_h"
+        android:paddingEnd="@dimen/native_button_padding_h"
+        android:textColor="@color/text_primary"
+        android:textColorHint="@color/text_secondary"
+        android:textSize="@dimen/button_text_size" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="@dimen/report_gap"
+        android:fillViewport="true">
+
+        <TextView
+            android:id="@+id/report"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/report_gap"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/report_text_size" />
+    </ScrollView>
+</LinearLayout>
