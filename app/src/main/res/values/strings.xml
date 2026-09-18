@@ -88,14 +88,14 @@
     <string name="status_floor">Room: %1$d, speech above %2$d</string>
 
     <string name="settings_wheel">Opens the app: %1$s</string>
-    <string name="settings_wheel_explain">Only a long press, and only if this car sends its voice key as a media button — which the diagnostics screen will tell you. Leave it off until you know: a short press of play or pause belongs to whatever is playing music.</string>
+    <string name="settings_wheel_explain">Only a long press, and only if the wheel\'s broadcast reaches this app while it is closed — the diagnostics screen tells you in three minutes.\n\nLeave it off if you use Android Auto. With a phone connected the long press belongs to Google Assistant, and both would open at once: this app hears the wheel, it does not take it from anyone.</string>
     <string name="on">on</string>
     <string name="off">off</string>
 
     <string name="settings_section_cost">What it costs</string>
     <string name="settings_section_keys">Keys</string>
     <string name="settings_section_conversation">Conversation</string>
-    <string name="settings_section_wheel">Steering wheel</string>
+    <string name="settings_section_wheel">Opening it</string>
 
     <string name="settings_section_usage">What it has used</string>
     <string name="settings_usage_summary">Since %1$s: %2$d questions, %3$.1f minutes listened, %4$.1fk tokens, %5$.1fk characters spoken.</string>
@@ -139,4 +139,6 @@
     <string name="wheel_watch_explain">For three minutes this screen keeps listening even when it is not in front, so that a press which opens the factory assistant still gets recorded. Everything that arrives is written down and survives the app being closed.\n\nWhile it runs, this app claims the media buttons, so play and pause may not reach the music player. It stops on its own after three minutes.</string>
     <string name="wheel_watch_start">Watch for three minutes</string>
     <string name="wheel_watch_started">Watching. Go and press the wheel: short, long, and twice quickly.</string>
+    <string name="settings_listen_open">Listens as soon as it opens: %1$s</string>
+    <string name="settings_listen_open_explain">A gesture that opens the app is only half a command if you then have to touch the screen, so it starts recording the moment it appears.\n\nIt stays quiet until a key is entered and the microphone has been allowed, and it never asks for the microphone by itself — so it cannot start at somebody on a car that is not set up yet.</string>
 </resources>

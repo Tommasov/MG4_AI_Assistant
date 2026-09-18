@@ -38,6 +38,7 @@ public final class Settings {
     private static final String KEY_VOICE = "remote_voice";
     private static final String KEY_CAR_VOICE = "use_car_voice";
     private static final String KEY_WHEEL_START = "wheel_starts_app";
+    private static final String KEY_LISTEN_OPEN = "listen_on_open";
     private static final String KEY_OPENAI_OK = "openai_key_verified";
     private static final String KEY_XAI_OK = "xai_key_verified";
 
@@ -123,6 +124,26 @@ public final class Settings {
     @NonNull
     public String enteredXaiKey() {
         return prefs.getString(KEY_XAI, "");
+    }
+
+    /**
+     * Whether the app starts recording the moment it appears.
+     *
+     * <p>On by default, because it is what this app is for. Every way of opening it — the
+     * wheel, a gesture, the icon — lands on a screen whose only control is "tap to speak",
+     * and an assistant that has to be touched after being opened is an assistant that has
+     * been opened twice.
+     *
+     * <p>The guard against surprise is not this flag but the two conditions in
+     * AssistantActivity: no key entered, or microphone not yet granted, and it stays quiet.
+     * So a car that has just been set up never starts listening at somebody unprepared.
+     */
+    public boolean listenOnOpen() {
+        return prefs.getBoolean(KEY_LISTEN_OPEN, true);
+    }
+
+    public void setListenOnOpen(boolean listen) {
+        prefs.edit().putBoolean(KEY_LISTEN_OPEN, listen).apply();
     }
 
     public boolean usingBuiltInKey() {

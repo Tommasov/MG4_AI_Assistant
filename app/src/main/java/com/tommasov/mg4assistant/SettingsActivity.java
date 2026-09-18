@@ -47,6 +47,7 @@ public class SettingsActivity extends AppCompatActivity {
     private Button modelButton;
     private Button voiceButton;
     private Button wheelButton;
+    private Button listenOpenButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,6 +63,7 @@ public class SettingsActivity extends AppCompatActivity {
         modelButton = findViewById(R.id.button_model);
         voiceButton = findViewById(R.id.button_voice);
         wheelButton = findViewById(R.id.button_wheel);
+        listenOpenButton = findViewById(R.id.button_listen_open);
 
         findViewById(R.id.button_back).setOnClickListener(v -> finish());
         findViewById(R.id.button_usage_reset).setOnClickListener(v -> Dialogs.builder(this)
@@ -89,6 +91,10 @@ public class SettingsActivity extends AppCompatActivity {
         voiceButton.setOnClickListener(v -> chooseVoice());
         wheelButton.setOnClickListener(v -> {
             settings.setWheelStartsApp(!settings.wheelStartsApp());
+            show();
+        });
+        listenOpenButton.setOnClickListener(v -> {
+            settings.setListenOnOpen(!settings.listenOnOpen());
             show();
         });
 
@@ -158,6 +164,9 @@ public class SettingsActivity extends AppCompatActivity {
 
         wheelButton.setText(getString(R.string.settings_wheel,
                 getString(settings.wheelStartsApp() ? R.string.on : R.string.off)));
+
+        listenOpenButton.setText(getString(R.string.settings_listen_open,
+                getString(settings.listenOnOpen() ? R.string.on : R.string.off)));
 
         showUsage();
         showKeys();

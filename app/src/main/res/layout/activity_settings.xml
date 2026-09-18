@@ -215,8 +215,17 @@
 
             <TextView
                 style="@style/Hint"
-                android:paddingBottom="@dimen/section_gap"
                 android:text="@string/settings_wheel_explain" />
+
+            <Button
+                android:id="@+id/button_listen_open"
+                style="@style/TonalButton"
+                android:layout_marginTop="@dimen/row_gap" />
+
+            <TextView
+                style="@style/Hint"
+                android:paddingBottom="@dimen/section_gap"
+                android:text="@string/settings_listen_open_explain" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

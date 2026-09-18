@@ -50,6 +50,18 @@ import java.util.List;
 public class AssistantActivity extends AppCompatActivity {
 
     private static final int REQUEST_RECORD_AUDIO = 1;
+
+    /**
+     * Set when this screen has just been opened, cleared once acted on.
+     *
+     * <p>The distinction that makes automatic listening bearable: being opened is not the same
+     * as becoming visible. Coming back from the settings screen also runs through onStart, and
+     * an assistant that started recording every time you closed a dialog would be unusable.
+     */
+    private boolean pendingAutoListen;
+
+    /** Whether the screen is between onStart and onStop, so listening would be visible. */
+    private boolean started;
     /*
      * No preference keys here. They used to live in this class as well as in Settings, which
      * is how the front screen came to show one voice while the settings screen showed
@@ -126,6 +138,7 @@ public class AssistantActivity extends AppCompatActivity {
 
         status.setText(R.string.status_ready);
         applySettings();
+        pendingAutoListen = true;
     }
 
     // ---------------------------------------------------------------- recording
@@ -472,9 +485,48 @@ public class AssistantActivity extends AppCompatActivity {
         return settings.speechKey();
     }
 
+    /**
+     * A second launch while this screen is already on top.
+     *
+     * <p>Worth handling rather than ignoring: whatever opens this app does so with
+     * SINGLE_TOP, so asking a second question by repeating the gesture arrives here instead of
+     * creating a new screen. Without this it would look like the gesture had stopped working.
+     */
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        pendingAutoListen = true;
+        consumeAutoListen();
+    }
+
+    /**
+     * Starts listening if this was an opening and the app is in a state to be spoken to.
+     *
+     * <p>Deliberately never asks for the microphone from here. A permission dialogue that
+     * appears because an app opened, rather than because somebody pressed something, is the
+     * kind of thing people refuse on reflex — and refusing it here would cost the app the one
+     * permission it cannot work without.
+     */
+    private void consumeAutoListen() {
+        if (!pendingAutoListen || !started) {
+            return;
+        }
+        pendingAutoListen = false;
+        if (!settings.listenOnOpen() || busy || recorder.isRecording() || !settings.canHear()) {
+            return;
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        startRecording();
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
+        started = true;
         // Settings may have changed while this screen sat in the background. Re-reading here
         // is what keeps the two screens from disagreeing.
         applySettings();
@@ -487,10 +539,12 @@ public class AssistantActivity extends AppCompatActivity {
                 finish();
             }
         });
+        consumeAutoListen();
     }
 
     @Override
     protected void onStop() {
+        started = false;
         wheel.stop();
         // Leaving the screen with the microphone live would be the one way this app listens
         // when nobody asked it to.

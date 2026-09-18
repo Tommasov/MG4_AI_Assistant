@@ -85,14 +85,14 @@
     <string name="status_floor">Ambiente: %1$d, parlato sopra %2$d</string>
 
     <string name="settings_wheel">Apre l\'app: %1$s</string>
-    <string name="settings_wheel_explain">Solo la pressione lunga, e solo se quest\'auto manda il tasto voce come tasto media — la Diagnostica te lo dice. Tienilo spento finché non lo sai: una pressione breve di play o pausa appartiene a chi sta suonando musica.</string>
+    <string name="settings_wheel_explain">Solo la pressione lunga, e solo se il broadcast del volante raggiunge questa app mentre è chiusa — la Diagnostica te lo dice in tre minuti.\n\nTienilo spento se usi Android Auto. Con un telefono collegato la pressione lunga appartiene all\'assistente di Google, e si aprirebbero tutti e due: quest\'app il volante lo sente, non lo toglie a nessuno.</string>
     <string name="on">acceso</string>
     <string name="off">spento</string>
 
     <string name="settings_section_cost">Quanto costa</string>
     <string name="settings_section_keys">Chiavi</string>
     <string name="settings_section_conversation">Conversazione</string>
-    <string name="settings_section_wheel">Volante</string>
+    <string name="settings_section_wheel">Come si apre</string>
 
     <string name="settings_section_usage">Quanto ha consumato</string>
     <string name="settings_usage_summary">Dal %1$s: %2$d domande, %3$.1f minuti ascoltati, %4$.1fk token, %5$.1fk caratteri pronunciati.</string>
@@ -136,4 +136,6 @@
     <string name="wheel_watch_explain">Per tre minuti questa schermata continua ad ascoltare anche quando non è in primo piano, così una pressione che apre l\'assistente di serie viene registrata lo stesso. Tutto quello che arriva viene scritto e resiste anche alla chiusura dell\'app.\n\nMentre è attiva, l\'app si prende i tasti media, quindi play e pausa potrebbero non arrivare al lettore musicale. Si spegne da sola dopo tre minuti.</string>
     <string name="wheel_watch_start">Osserva per tre minuti</string>
     <string name="wheel_watch_started">Sto osservando. Vai a premere il tasto al volante: breve, lungo, e due volte di seguito.</string>
+    <string name="settings_listen_open">Ascolta appena si apre: %1$s</string>
+    <string name="settings_listen_open_explain">Un gesto che apre l\'app è mezzo comando, se poi devi toccare lo schermo: così comincia a registrare nel momento in cui compare.\n\nResta zitta finché non c\'è una chiave e il microfono non è stato concesso, e il microfono non lo chiede mai da sola — quindi non può partire addosso a qualcuno su un\'auto non ancora configurata.</string>
 </resources>

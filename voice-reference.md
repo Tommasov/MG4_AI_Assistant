@@ -153,6 +153,60 @@ Una pressione lunga si riconosce così: il `down` si ripete dopo circa un second
 16:44:08  keycode 287, down false, long false
 ```
 
+### Inventario dei comandi al volante (dal proprietario, 19/09/2026)
+
+Sei tasti e due bilancieri a croce.
+
+**I sei tasti**
+
+| tasto | funzione | riassegnabile |
+|---|---|---|
+| voce (keycode 287) | assistente OEM sulla pressione breve | no |
+| stella vuota (286) | rigenerazione | sì, **ma non si tocca** |
+| stella piena (17) | telecamera | sì, **ma non si tocca** |
+| funzione | modificatore: tenuto premuto, il bilanciere destro comanda il cruscotto | sconosciuto |
+| telefono (sopra il funzione) | telefonia Bluetooth | no |
+| ACC (sotto il tasto voce) | attiva la guida assistita | no |
+
+**I due bilancieri**, a croce, quindi quattro direzioni ciascuno:
+
+| bilanciere | funzione | riassegnabile |
+|---|---|---|
+| destro | volume su/giù, traccia avanti/indietro — e col tasto funzione, il cruscotto | no, fisso |
+| sinistro | velocità ACC su/giù, distanza più/meno | no, fisso |
+
+**Il volante è allocato per intero dalla fabbrica.** Quattordici ingressi distinti fra tasti e
+direzioni, tutti con un padrone: audio, telefono, guida assistita, cruscotto, assistente OEM,
+e le due stelle che il proprietario ha già speso. Non esiste un tasto libero da prendere, e
+questa è la conclusione della ricerca, non un passaggio intermedio.
+
+Le stelle sono escluse per scelta: chi installa l'app ha già mesi di abitudine su quei due
+gesti. Il tasto funzione non è mai stato premuto dentro una finestra di osservazione, quindi
+non sappiamo se emetta un keycode — ma è un **modificatore**, e prenderselo significherebbe
+togliere al guidatore il comando del cruscotto.
+
+**Ne resta uno solo:** la pressione lunga del tasto voce. Non un tasto in più, ma un gesto che
+nessuno usa su un tasto che è già dell'assistente.
+
+Con Android Auto collegato quel gesto appartiene all'assistente di Google, e il nostro receiver
+non può consumarlo — il broadcast è un referto, arriva dopo che il sistema ha già smistato il
+tasto — quindi si aprirebbero tutti e due. Era stato il motivo per accantonare il volante, ed
+è stato ribaltato il 19/09/2026 da una premessa sul pubblico: **chi installa questo homebrew
+lo fa proprio per non usare Android Auto**, cioè per far girare le app sul dispositivo invece
+che sul telefono. Il caso normale è quindi "nessun telefono collegato, pressione lunga libera",
+e per chi Android Auto lo usa l'interruttore resta spento — è spento di default.
+
+Rilevare la proiezione e farsi da parte da soli sarebbe l'alternativa elegante, ma su AAOS 9 da
+un'app qualunque è una ricerca a sé: non vale il prezzo finché l'interruttore manuale basta.
+
+Resta da misurare una cosa sola: **il broadcast raggiunge un receiver dichiarato nel manifest?**
+Se no, il volante non può aprire l'app spenta e l'interruttore va tolto invece di restare acceso
+a non fare niente.
+
+Nota a margine, riferita dal proprietario e non verificata: il cruscotto davanti al guidatore
+è uno schermo cablato al tablet, che ne riceve i dati. Se un giorno servisse mostrare qualcosa
+lì, è da lì che si comincia a guardare.
+
 ### Smentito: i tasti media
 
 Un `MediaSession` attivo che dichiarava di essere in riproduzione, quindi con la pretesa più

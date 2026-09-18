@@ -45,11 +45,17 @@ public final class HardKeyWatch {
      * the log on 18 September 2026: the hollow star, which he has set to cycle regeneration,
      * and the filled star, which he has set to open the camera.
      *
-     * <p>Both are assignable from the car's own settings, which makes them the interesting
-     * ones: the voice key's short press belongs to the factory assistant and cannot be taken
-     * from it, while these two are the owner's to spend. Note that the broadcast arrives
-     * whatever they are assigned to — it reports the press, it does not replace the action —
-     * so listening for one of them here does not stop the camera opening.
+     * <p>Both are assignable from the car's own settings, and that briefly looked like the way
+     * in: the voice key's short press belongs to the factory assistant and cannot be taken from
+     * it, while these two are free. It was ruled out on 19 September 2026, and the reason is
+     * worth keeping. People already use them. Whoever fits this app to a car has, by then,
+     * spent months with one star on the camera and the other on regeneration, and an assistant
+     * that asks for one of those back is asking them to give up a habit for a newcomer.
+     *
+     * <p>So these constants exist to name a keycode in a log, and nothing here listens for
+     * them. Note also that the broadcast arrives whatever a key is assigned to — it reports
+     * the press, it does not replace the action — so hearing one would not have stopped the
+     * camera opening either. The obstacle was never technical.
      */
     public static final int KEYCODE_STAR_HOLLOW = 286;
     public static final int KEYCODE_STAR_FILLED = 17;
