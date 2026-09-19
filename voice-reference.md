@@ -207,6 +207,22 @@ Nota a margine, riferita dal proprietario e non verificata: il cruscotto davanti
 è uno schermo cablato al tablet, che ne riceve i dati. Se un giorno servisse mostrare qualcosa
 lì, è da lì che si comincia a guardare.
 
+### Secondo referto (19/09/2026): il canale riferisce tutto il volante
+
+Oltre ai tre keycode già noti sono comparsi **3, 291, 297, 298, 299, 300**. Quindi il broadcast
+non riporta solo i tasti: riferisce anche i bilancieri. I nuovi non sono ancora associati ai
+comandi fisici — vanno chiesti al proprietario, come si è fatto per 286 e 17, perché è di gran
+lunga il modo più rapido di identificarli.
+
+**Tutte le righe erano marcate `broadcast`, nessuna `manifest`.** Cioè le pressioni sono state
+sentite dal receiver registrato a runtime, e quindi il processo era vivo: l'app era fuori dallo
+schermo, non spenta. Il referto **non** dimostra che il volante possa svegliare un'app chiusa.
+
+**E la domanda non serve più rispondersi.** La direzione scelta è l'overlay, che richiede un
+servizio residente; un servizio residente è un processo vivo; e su un processo vivo il receiver
+a runtime funziona — dimostrato da ogni riga di entrambi i referti. Il receiver da manifest era
+la strada per *evitare* il servizio: con l'overlay il servizio c'è comunque.
+
 ### Smentito: i tasti media
 
 Un `MediaSession` attivo che dichiarava di essere in riproduzione, quindi con la pretesa più
